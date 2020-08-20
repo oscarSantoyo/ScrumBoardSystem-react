@@ -1,32 +1,25 @@
 import axios from 'axios'
-import { parseJsonSourceFileConfigFileContent } from 'typescript'
 
-const projects = (state = {}, action) => {
-    switch (action.type) {
-      case 'ADD_PROJECT':
-        return Object.assign({},state,
-          {
-            id: action.id,
-            name: action.name
-          }
-        )
-/*       case  'GET_PROJECTS':
-        console.log("LLEGO A PEDIR PROJECTOS")
-        const projects = await axios.get('/apiprojects/projects').then(res=>res.data)
-        const tempState=[...state,projects]
-      return tempState */
-      case  'GET_PROJECTS':
+const projects = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_PROJECT':
       return state
-      case 'RECIEVE_PROJECTS':
-        console.log("LLEGO A RECIBIR PROJECTS")
-        const {projects}=action
-        console.log(projects)
-        const stateTmp= Object.assign({},state)
-          stateTmp["projects"]=projects
-        return stateTmp
-      default:
-        return state
-    }
+    case 'ADDED_PROJECT':
+      const {newProject}=action
+      return [...state,{
+        id:newProject.id,
+        name:newProject.name
+      }]
+    case 'GET_PROJECTS':
+      return state
+    case 'RECIEVE_PROJECTS':
+      const { projects } = action
+      return [...state, ...projects]
+      case 'DELETED_PROJECT':
+        return state.filter(project=>project.id!=action.id)
+    default:
+      return state
   }
-  
-  export default projects
+}
+
+export default projects

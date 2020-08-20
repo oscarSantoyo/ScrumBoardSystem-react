@@ -1,15 +1,21 @@
-import Axios from "axios"
-
 import axios from 'axios'
 
-export const addProject = name => ({
-    type: 'ADD_PROJECT',
-    name
+export const addProject = (dispatch,name) => {
+  axios.post('/apiprojects/projects',
+  {
+    name:name
+  }).then(res=>res.data)
+  .then(newProject=>{
+    console.log("RESPUESTA", newProject)
+    dispatch(projectAdded(newProject))
   })
+  return {
+    type: 'ADD_PROJECT'
+  }}
 
-  export const recieveProjects=projects=>({
-    type:"RECIEVE_PROJECTS",
-    projects
+  export const projectAdded=newProject=>({
+    type:"ADDED_PROJECT",
+    newProject
   })
 
   export const getProjects = (dispatch) => {
@@ -20,3 +26,25 @@ export const addProject = name => ({
     return {
     type: 'GET_PROJECTS',
   }}
+
+  export const recieveProjects=projects=>({
+    type:"RECIEVE_PROJECTS",
+    projects
+  })
+
+  export const deleteProject=(dispatch,id)=>{
+    axios.delete(`/apiprojects/projects/${id}`).then(res=>{
+      if(res.status==200){
+        dispatch(deletedProject(id))
+      }
+    })
+    return {
+      type:"DELETE_PROJECT"
+    }
+  }
+
+  export const deletedProject=id=>({
+    type:"DELETED_PROJECT",
+    id
+  })
+

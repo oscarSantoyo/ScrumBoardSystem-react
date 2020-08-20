@@ -6,19 +6,20 @@ const AddProject= ({dispatch})=>{
     let input
     
     return (
-        <div>
-            <form
+        <div className="w-100">
+            <form className="form-inline"
             onSubmit={e=>{
                 e.preventDefault()
                 if(!input.value.trim()){
                     return
                 }
-                dispatch(addProject(input.value))
+                dispatch(addProject(dispatch,input.value))
                 input.value=''
             }}
             >
-                <input ref={node=>( input = node)}/>
-                <button type="submit">Add project</button>
+                
+                <input type="text" className="form-control  mb-2 mr-sm-2 mt-2" ref={node=>( input = node)}/>
+                <button type="submit" className="btn btn-primary mb-2 mr-sm-2 mt-2">Add project</button>
             </form>
         </div>
     )

@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import Project from './Project'
 
 const ProjectList=(props)=>{
-    console.log("proyects: ",props)
     const projects = props.projects||[]
    
-    return (<ul>
+    return (<ul className="list-group">
         {projects.map(project=>(
-            <Project key={project.id} {...project} />
+            <Project key={project.id} {...project} onDelete={props.onDelete}/>
         ))}
     </ul>)
 }
