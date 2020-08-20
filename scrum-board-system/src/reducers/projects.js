@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 const projects = (state = [], action) => {
   switch (action.type) {
     case 'ADD_PROJECT':
@@ -10,13 +8,12 @@ const projects = (state = [], action) => {
         id:newProject.id,
         name:newProject.name
       }]
-    case 'GET_PROJECTS':
+    case 'FETCH_PROJECTS':
       return state
-    case 'RECIEVE_PROJECTS':
-      const { projects } = action
-      return [...state, ...projects]
+    case 'FETCHED_PROJECTS':
+      return [...state, ...action.projects]
       case 'DELETED_PROJECT':
-        return state.filter(project=>project.id!=action.id)
+        return state.filter(project=>project.id!==action.id)
     default:
       return state
   }

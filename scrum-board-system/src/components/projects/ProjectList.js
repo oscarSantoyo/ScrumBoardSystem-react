@@ -5,7 +5,7 @@ import Project from './Project'
 const ProjectList=(props)=>{
     const projects = props.projects||[]
    
-    return (<ul className="list-group">
+    return (<ul className="list-group d-flex  lign-items-start">
         {projects.map(project=>(
             <Project key={project.id} {...project} onDelete={props.onDelete}/>
         ))}

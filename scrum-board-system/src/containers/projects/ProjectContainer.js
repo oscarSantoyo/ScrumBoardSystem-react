@@ -1,8 +1,8 @@
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import AddProject from './AddProject'
-import ProjectList from '../components/ProjectList'
-import { getProjects,deleteProject} from '../actions'
+import ProjectList from '../../components/projects/ProjectList'
+import { getProjects,deleteProject} from '../../actions/projects'
 
 
 export const ProjectContainer = ({projects,getProjects,deleteProject}) => {
@@ -11,7 +11,9 @@ export const ProjectContainer = ({projects,getProjects,deleteProject}) => {
     },[])
     return (
         <div className="d-flex align-items-star flex-column">
+            <h3>Add New Project</h3>
             <AddProject/>
+            <h3>Project List</h3>
             <ProjectList projects={projects} onDelete={deleteProject} />
         </div>
     )

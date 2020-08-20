@@ -6,7 +6,6 @@ export const addProject = (dispatch,name) => {
     name:name
   }).then(res=>res.data)
   .then(newProject=>{
-    console.log("RESPUESTA", newProject)
     dispatch(projectAdded(newProject))
   })
   return {
@@ -24,17 +23,17 @@ export const addProject = (dispatch,name) => {
       dispatch(recieveProjects(projects))
     })
     return {
-    type: 'GET_PROJECTS',
+    type: 'FETCH_PROJECTS',
   }}
 
   export const recieveProjects=projects=>({
-    type:"RECIEVE_PROJECTS",
+    type:"FETCHED_PROJECTS",
     projects
   })
 
   export const deleteProject=(dispatch,id)=>{
     axios.delete(`/apiprojects/projects/${id}`).then(res=>{
-      if(res.status==200){
+      if(res.status===200){
         dispatch(deletedProject(id))
       }
     })

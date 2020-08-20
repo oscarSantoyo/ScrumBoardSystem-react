@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {addProject} from '../actions'
+import {addProject} from '../../actions/projects'
 
 const AddProject= ({dispatch})=>{
     let input
@@ -18,8 +18,8 @@ const AddProject= ({dispatch})=>{
             }}
             >
                 
-                <input type="text" className="form-control  mb-2 mr-sm-2 mt-2" ref={node=>( input = node)}/>
-                <button type="submit" className="btn btn-primary mb-2 mr-sm-2 mt-2">Add project</button>
+                <input type="text" className="form-control  mb-2 mr-sm-2 mt-2" ref={node=>( input = node)} placeholder="New Project Name"/>
+                <button type="submit" className="btn btn-primary mb-2 mr-sm-2 mt-2">Add</button>
             </form>
         </div>
     )
