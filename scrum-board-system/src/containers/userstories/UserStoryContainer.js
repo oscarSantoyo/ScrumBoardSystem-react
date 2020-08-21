@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import {getUserstories} from '../../actions/userstories'
 import UserstoryList from '../../components/userstories/UserstoryList'
+import AddUserstory from './AddUserstory'
 
 export const UserStoryContainer = ({userstories,getUserstories,deleteUserstory}) => {
     useEffect(() => {
@@ -9,6 +10,7 @@ export const UserStoryContainer = ({userstories,getUserstories,deleteUserstory})
     }, [])
     return (
         <div className="">
+            <AddUserstory/>
             <h3>Project's User Stories</h3>
             <UserstoryList userstories={userstories}/>
         </div>
