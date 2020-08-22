@@ -5,7 +5,7 @@ export const UserstoryList = (props) => {
     return (
         <ul className="list-group">
             {userstories.map(userstory=>(
-                <UserStory key={userstory.id} {...userstory}/>
+                <UserStory key={userstory.id} {...userstory} currentProjectId={props.currentProjectId} deleteUserStory={props.deleteUserStory}/>
             ))}
         </ul>
     )

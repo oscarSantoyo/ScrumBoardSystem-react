@@ -1,14 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { addUserstory } from '../../actions/userstories'
 
-export const AddUserstory = ({ dispatch }) => {
+export const AddUserstory = ({ projectId,addUserStory }) => {
 
     let title
     let points
     let description
-    //TODO Use online as a placeholder until the real id is obtain by de state
-    let projectId=1
+
 
     return (
         <div className="mt-2">
@@ -20,8 +19,7 @@ export const AddUserstory = ({ dispatch }) => {
                         description:description.value.trim(),
                         weight:points.value.trim()
                     }
-                    console.log("HISSSS ",newUserstory)
-                    dispatch(addUserstory(dispatch,projectId,newUserstory))
+                    addUserStory(projectId,newUserstory)
                     title.value=''
                     description.value=''
                     points.value=''
@@ -54,6 +52,14 @@ export const AddUserstory = ({ dispatch }) => {
         </div>
     )
 }
+const mapStateToProps = (state) => ({
+    projectId: state.global.projectId
+})
+const mapDispatchToProps = dispatch=>({
+    addUserStory:(projectId,newUserstory)=>dispatch(addUserstory(dispatch,projectId,newUserstory))
+})
 
+//TODO CAMBIAR LOS REFS POR OBJECTOS(TAGS) NATIVOS DE REACT
+//TODO MANDAR QUITAR EL ADD DEL SUBMIT NO USAR LOS EVENTOS DEL SUBMIT
 
-export default connect()(AddUserstory)
+export default connect(mapStateToProps,mapDispatchToProps)(AddUserstory)

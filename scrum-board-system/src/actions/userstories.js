@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export const getUserstories=(dispatch)=>{
-    axios.get('/apiprojects/projects/userstories')
+export const getUserstories=(dispatch,projectId)=>{
+    axios.get(`/apiprojects/projects/${projectId}/userstories`)
     .then(res=>res.data)
     .then(userstories=>{ dispatch(fetchedUserstories(userstories))})
     return {
@@ -29,8 +29,8 @@ export const addedUserstory=newUserstory=>({
     newUserstory
 })
 
-export const deleteUserstory=(dispatch,userStoryId)=>{
-    axios.delete(`/apiprojects/projects/${1}/usersoties/${userStoryId}`)
+export const deleteUserstory=(dispatch,projectId,userStoryId)=>{
+    axios.delete(`/apiprojects/projects/${projectId}/userstories/${userStoryId}`)
     .then(res=>{
         if(res.status){
             dispatch(deletedUserstory(userStoryId))
@@ -40,7 +40,7 @@ export const deleteUserstory=(dispatch,userStoryId)=>{
     }
 }
 
-export const deletedUserstory=id=>({
+export const deletedUserstory=(projectId,userStoryId)=>({
     type:"DELETED_USER_STORY",
-    id
+    userStoryId
 })

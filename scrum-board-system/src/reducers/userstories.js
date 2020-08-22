@@ -3,7 +3,7 @@ const userstories = (state = [], action) => {
         case 'FETCH_USERS_STORIES':
             return state
         case 'FETCHED_USER_STORIES':
-            return [...state, ...action.userstories]
+            return [...action.userstories]
         case 'ADD_USER_STORY':
             return state
         case 'ADDED_USER_STORY':
@@ -17,7 +17,7 @@ const userstories = (state = [], action) => {
         case 'DELETE_USER_STORY':
             return state
         case 'DELETED_USER_STORY':
-            return state.filter(story=>story.id!==action.id)
+            return state.filter(story=>story.id!==action.userStoryId)
         default:
             return state
     }
