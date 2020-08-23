@@ -4,6 +4,7 @@ import { faTrash, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import './App.css';
 import ProjectContainer from './containers/projects/ProjectContainer';
 import UserStoryContainer  from './containers/userstories/UserStoryContainer';
+import  SprintContainer  from './containers/sprints/SprintContainer';
 
 library.add(faTrash, faEdit, faPlus);
 
@@ -12,6 +13,7 @@ function App() {
     <div className="App container">
       <ProjectContainer/>
       <UserStoryContainer/>
+      <SprintContainer/>
     </div>
   );
 }
