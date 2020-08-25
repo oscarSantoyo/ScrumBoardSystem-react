@@ -9,10 +9,13 @@ export const getUserstories=(dispatch,projectId)=>{
     }   
 }
 
-export const fetchedUserstories=userstories=>({
+export const fetchedUserstories=userstories=>{
+    console.log('Received userstories', userstories)
+    return {
     type: "FETCHED_USER_STORIES",
     userstories
-})
+    }
+}
 
 export const addUserstory=(dispatch,projectId,newUserstory)=>{
     axios.post(`/apiprojects/projects/${projectId}/userstories`,

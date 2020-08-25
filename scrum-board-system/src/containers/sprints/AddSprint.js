@@ -1,21 +1,17 @@
 import React,{Component} from 'react'
 import { connect } from 'react-redux'
 import { addSprint } from '../../actions/sprints'
-import { Formik, Field, Form, ErrorMessage,withFormik } from 'formik';
+import { useForm } from 'react-hook-form'
+// import { Formik, Field, Form, ErrorMessage,withFormik } from 'formik';
 
-export const AddSprint = ({currentProjectId,addSprint}) => {
-
+export const AddSprint = ({currentProjectId}) => {
+    const { handleSubmit, register, error } = useForm();
+    const onSubmit = (values) => console.log('values: ', values)
     return (
-        <Formik
-            initialValues={{name:''}}
-            onSubmit={this.addSprint(currentProjectId,this.values)}
-        >
-            <Form>
-                <Field name="name" type="text" className="form-control"/>
-                <ErrorMessage name="name" />
-                <button type="submit" className="btn btn-primary">Add</button>
-            </Form>
-        </Formik>
+        <form onSubmit={handleSubmit(onSubmit)} >
+          <input name="name" ref={register} className="form-control"/>
+          <button type="submit" className="btn btn-primary">Add</button>
+        </form>
     )
 }
 
@@ -27,9 +23,4 @@ const mapDispatchToProps =dispatch=>({
     addSprint:(currentProjectId,newSprint)=>dispatch(addSprint(dispatch,currentProjectId,newSprint))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withFormik({
-    mapPropsToValues: () => ({ currentProjectId: currentProjectId }),
-    handleSubmit: (values, { setSubmitting }) => {
-        addSprint(2,values)
-      }
-}))(AddSprint)
+export default connect(mapStateToProps, mapDispatchToProps)(AddSprint)

@@ -1,19 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reducers from './reducers'
+import SlideMenu from 'react-slide-menu'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 const store=createStore(reducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-ReactDOM.render(
+const Project = () => <div> <h1> Hola</h1> </div>
+render(
   <Provider store={store}>
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+      <Router>
+        <Switch>
+          <Route path="/" component={App}/>
+          <Route exact path="/projects" component={Project}/>
+        </Switch>
+      </Router>
   </Provider>,
   document.getElementById('root')
 );
