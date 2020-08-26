@@ -1,8 +1,7 @@
 const projects = (state = {projects: [], project: {}}, action) => {
   switch (action.type) {
     case 'SELECT_PROJECT':
-      if (state.projects.length <= 0) return state
-      const {projects} = state
+      const projects = state.projects || []
       const project = projects.find(projectObj => projectObj.id == action.projectId)
       return Object.assign({}, state, {
         project

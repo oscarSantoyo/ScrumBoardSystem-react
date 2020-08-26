@@ -12,7 +12,7 @@ export const addProject = (dispatch,name) => {
     type: 'ADD_PROJECT'
   }}
 
-export const selectProject= projectId => ({
+export const selectProject= (projectId) => ({
     type: 'SELECT_PROJECT',
     projectId
 })

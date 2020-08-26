@@ -6,6 +6,7 @@ import { getSprints } from '../../actions/sprints'
 import UserStory from '../../components/userstories/UserStory'
 import AddUserStoryModal from '../../components/userstories/AddUserStoryModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useRouteMatch } from 'react-router-dom'
 
 const Sprint = (props) => {
   const { name, id, userStories } = props
@@ -50,7 +51,7 @@ const SprintContainer = (props) => {
 }
 
 const UserStoriesContainer = (props) => {
-  const { title, userStories } = props
+  const { title, userStories }  = props
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -58,7 +59,7 @@ const UserStoriesContainer = (props) => {
 
   return (
     <div>
-    <p> <h2> {title} </h2> <FontAwesomeIcon icon="plus" onClick={handleShow} /> </p>
+    <h2> {title} </h2> <FontAwesomeIcon icon="plus" onClick={handleShow} />
 
       <AddUserStoryModal
         show={show}
@@ -80,17 +81,16 @@ const UserStoriesContainer = (props) => {
 const getUserStoriesWOSprint = (userStories) => userStories && userStories.filter(userStory => !userStory.sprint)
 const ProjectSelectedContainer = (props) => {
   const { getUserStoriesByProjectId, getSprintsByProjectId, addUserStory,
-          projectUserStories, project, projects, projectSprints } = props
-  const { projectId } = props.match.params
+          projectUserStories, project, projects, projectSprints, selectProjectState } = props
+  const {projectId} = useRouteMatch().params
+
   useEffect(()=>{
-    selectProject(projectId)
+    selectProjectState(projectId)
     getUserStoriesByProjectId(projectId)
     getSprintsByProjectId(projectId)
   },[projectId])
   useEffect(()=>{
-    if(projects.lengt > 0){
-      selectProject(projectId)
-    }
+    selectProjectState(projectId)
   },[projects])
   return (
     <div>
@@ -119,7 +119,7 @@ const mapStateToProps = (state, props) => {
 }}
 
 const mapDispatchToProps = dispatch => ({
-  selectProject: (projectId) => dispatch(selectProject(projectId)),
+  selectProjectState: (projectId, projects) => dispatch(selectProject(projectId, projects)),
   getUserStoriesByProjectId: (projectId) => dispatch(getUserstories(dispatch, projectId)),
   getSprintsByProjectId: (projectId) => dispatch(getSprints(dispatch, projectId)),
   addUserStory: (projectId) => console.log('Create new userStory', projectId),
