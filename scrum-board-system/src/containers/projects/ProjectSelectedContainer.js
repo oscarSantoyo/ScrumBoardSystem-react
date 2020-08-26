@@ -2,22 +2,24 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { selectProject } from '../../actions/projects'
 import { getUserstories } from '../../actions/userstories'
+import { getSprints } from '../../actions/sprints'
 
 const UserStory = (props) => {
-  const {title, description, weight, labels, tasks} = props
+  const {title, description, weight, labels, tasks, id} = props
   console.log('props: ',props)
   return (
     <div className="card">
     <div className="card-header" id="headingOne">
       <h2 className="mb-0">
-        <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                data-target={`#collapse${id}`} aria-expanded="true" aria-controls={`#collapse${id}`}>
           {title} : {weight}
         </button>
       </h2>
     </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div class="card-body">
+      <div id={`collapse${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div className="card-body">
         {description}
       </div>
     </div>
@@ -25,18 +27,77 @@ const UserStory = (props) => {
   )
 }
 
+const Sprint = (props) => {
+  const { name, id } = props
+  console.log('Sprint props', props)
+  const description = "hola"
+  return (
+
+    <div className="card">
+    <div className="card-header" id="headingOne">
+      <h2 className="mb-0">
+        <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                data-target={`#collapseSprint${id}`} aria-expanded="true" aria-controls={`#collapse${id}`}>
+          {name}
+        </button>
+      </h2>
+    </div>
+
+      <div id={`collapseSprint${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#sprints">
+      <div className="card-body">
+        {description}
+      </div>
+    </div>
+  </div>
+    )
+}
+
+const SprintContainer = (props) => {
+  const { sprints, userStories } = props;
+  console.log('sprints', sprints)
+  return (
+    <div>
+        <h2> UserStories by Sprint </h2>
+      <div className="accordion" id="sprints">
+    {sprints && sprints.map(sprint => {
+      return (
+        <Sprint key={sprint.id} {...sprint}/>
+      )
+    })}
+    </div>
+    </div>
+  )
+}
+
+const UserStoriesContainer = (props) => {
+  const {userStories} = props
+  return (
+    <div>
+      <h2> User Stories </h2>
+      <div class="accordion" id="accordionExample">
+        {userStories && userStories.map(userStory => {
+          return (
+            <UserStory key={userStory.id} {...userStory}/>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 const getProjectName = (projects, projectId) => projects.find && projects.find(project => project.id === projectId).name
 
 const ProjectSelectedContainer = (props) => {
-  const { getUserStoriesByProjectId, projectUserStories, project, selectProject, projects} = props
+  const { getUserStoriesByProjectId, getSprintsByProjectId, projectUserStories, project, projects, projectSprints } = props
   const { projectId } = props.match.params
   useEffect(()=>{
     selectProject(projectId)
-    getUserStoriesByProjectId(projectId);
+    getUserStoriesByProjectId(projectId)
+    getSprintsByProjectId(projectId)
   },[projectId])
   useEffect(()=>{
     console.log('projects changed: ',projects)
-    if(projects.length > 0){
+    if(projects.lengt > 0){
       selectProject(projectId)
       console.log('selecting project', projectId)
     }
@@ -44,14 +105,13 @@ const ProjectSelectedContainer = (props) => {
   return (
     <div>
       <h1> {project && project.name} </h1>
-      <h2> User Stories </h2>
-      <div class="accordion" id="accordionExample">
-        {projectUserStories && projectUserStories.map(userStory => {
-          return (
-            <UserStory key={userStory.id} {...userStory}/>
-          )
-        })}
-      </div>
+      <UserStoriesContainer
+        userStories = { projectUserStories }
+      />
+      <SprintContainer
+        sprints = { projectSprints }
+        userStories = { projectUserStories }
+      />
     </div>
     )
 }
@@ -60,6 +120,7 @@ const mapStateToProps = (state, props) => {
   return {
     projects: state.projects.projects,
     project: state.projects.project,
+    projectSprints: state.sprints,
     projectUserStories : state.userstories,
     tasks: state.tasks
 }}
@@ -67,6 +128,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => ({
   selectProject: (projectId) => dispatch(selectProject(projectId)),
   getUserStoriesByProjectId: (projectId) => dispatch(getUserstories(dispatch, projectId)),
+  getSprintsByProjectId: (projectId) => dispatch(getSprints(dispatch, projectId)),
   addUserStory: (projectId) => console.log('Create new userStory', projectId),
   getTasksByUserStoryId: (userStoryId) => console.log('Get tasks by userStory id')
 })
