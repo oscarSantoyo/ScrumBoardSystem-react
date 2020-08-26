@@ -3,36 +3,12 @@ import { connect } from 'react-redux'
 import { selectProject } from '../../actions/projects'
 import { getUserstories } from '../../actions/userstories'
 import { getSprints } from '../../actions/sprints'
-
-const UserStory = (props) => {
-  const {title, description, weight, labels, tasks, id} = props
-  console.log('props: ',props)
-  return (
-    <div className="card">
-    <div className="card-header" id="headingOne">
-      <h2 className="mb-0">
-        <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                data-target={`#collapse${id}`} aria-expanded="true" aria-controls={`#collapse${id}`}>
-          {title} : {weight}
-        </button>
-      </h2>
-    </div>
-
-      <div id={`collapse${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div className="card-body">
-        {description}
-      </div>
-    </div>
-  </div>
-  )
-}
+import UserStory from '../../components/userstories/UserStory'
 
 const Sprint = (props) => {
-  const { name, id } = props
+  const { name, id, userStories } = props
   console.log('Sprint props', props)
-  const description = "hola"
   return (
-
     <div className="card">
     <div className="card-header" id="headingOne">
       <h2 className="mb-0">
@@ -45,7 +21,7 @@ const Sprint = (props) => {
 
       <div id={`collapseSprint${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#sprints">
       <div className="card-body">
-        {description}
+        <UserStoriesContainer title={`User Stories of Sprint ${name}`} userStories={userStories}/>
       </div>
     </div>
   </div>
@@ -54,12 +30,15 @@ const Sprint = (props) => {
 
 const SprintContainer = (props) => {
   const { sprints, userStories } = props;
-  console.log('sprints', sprints)
+  const mutatedSprints = sprints.map(sprint => {
+    const us = userStories.filter(userStory => userStory.sprint && userStory.sprint.id == sprint.id)
+    return {...sprint, ...{userStories: us}}
+  })
   return (
     <div>
         <h2> UserStories by Sprint </h2>
       <div className="accordion" id="sprints">
-    {sprints && sprints.map(sprint => {
+    {mutatedSprints && mutatedSprints.map(sprint => {
       return (
         <Sprint key={sprint.id} {...sprint}/>
       )
@@ -70,10 +49,10 @@ const SprintContainer = (props) => {
 }
 
 const UserStoriesContainer = (props) => {
-  const {userStories} = props
+  const { title, userStories } = props
   return (
     <div>
-      <h2> User Stories </h2>
+      <h2> {title} </h2>
       <div class="accordion" id="accordionExample">
         {userStories && userStories.map(userStory => {
           return (
@@ -85,8 +64,7 @@ const UserStoriesContainer = (props) => {
   )
 }
 
-const getProjectName = (projects, projectId) => projects.find && projects.find(project => project.id === projectId).name
-
+const getUserStoriesWOSprint = (userStories) => userStories && userStories.filter(userStory => !userStory.sprint)
 const ProjectSelectedContainer = (props) => {
   const { getUserStoriesByProjectId, getSprintsByProjectId, projectUserStories, project, projects, projectSprints } = props
   const { projectId } = props.match.params
@@ -106,11 +84,12 @@ const ProjectSelectedContainer = (props) => {
     <div>
       <h1> {project && project.name} </h1>
       <UserStoriesContainer
+        title="backlog"
         userStories = { projectUserStories }
       />
       <SprintContainer
         sprints = { projectSprints }
-        userStories = { projectUserStories }
+        userStories = { getUserStoriesWOSprint(projectUserStories) }
       />
     </div>
     )
