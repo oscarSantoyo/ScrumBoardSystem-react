@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { selectProject } from '../../actions/projects'
 import { getUserstories } from '../../actions/userstories'
 import { getSprints } from '../../actions/sprints'
 import UserStory from '../../components/userstories/UserStory'
+import AddUserStoryModal from '../../components/userstories/AddUserStoryModal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Sprint = (props) => {
   const { name, id, userStories } = props
-  console.log('Sprint props', props)
   return (
     <div className="card">
     <div className="card-header" id="headingOne">
@@ -31,7 +32,7 @@ const Sprint = (props) => {
 const SprintContainer = (props) => {
   const { sprints, userStories } = props;
   const mutatedSprints = sprints.map(sprint => {
-    const us = userStories.filter(userStory => userStory.sprint && userStory.sprint.id == sprint.id)
+    const us = userStories.filter(userStory => (userStory.sprint || {}).id == sprint.id)
     return {...sprint, ...{userStories: us}}
   })
   return (
@@ -50,9 +51,21 @@ const SprintContainer = (props) => {
 
 const UserStoriesContainer = (props) => {
   const { title, userStories } = props
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <div>
-      <h2> {title} </h2>
+    <p> <h2> {title} </h2> <FontAwesomeIcon icon="plus" onClick={handleShow} /> </p>
+
+      <AddUserStoryModal
+        show={show}
+        handleClose={handleClose}
+        handleShow = {handleShow}
+      />
+
       <div class="accordion" id="accordionExample">
         {userStories && userStories.map(userStory => {
           return (
@@ -66,7 +79,8 @@ const UserStoriesContainer = (props) => {
 
 const getUserStoriesWOSprint = (userStories) => userStories && userStories.filter(userStory => !userStory.sprint)
 const ProjectSelectedContainer = (props) => {
-  const { getUserStoriesByProjectId, getSprintsByProjectId, projectUserStories, project, projects, projectSprints } = props
+  const { getUserStoriesByProjectId, getSprintsByProjectId, addUserStory,
+          projectUserStories, project, projects, projectSprints } = props
   const { projectId } = props.match.params
   useEffect(()=>{
     selectProject(projectId)
@@ -74,22 +88,22 @@ const ProjectSelectedContainer = (props) => {
     getSprintsByProjectId(projectId)
   },[projectId])
   useEffect(()=>{
-    console.log('projects changed: ',projects)
     if(projects.lengt > 0){
       selectProject(projectId)
-      console.log('selecting project', projectId)
     }
   },[projects])
   return (
     <div>
       <h1> {project && project.name} </h1>
       <UserStoriesContainer
-        title="backlog"
-        userStories = { projectUserStories }
+        title="Backlog"
+        addUserStory={addUserStory}
+        userStories = { getUserStoriesWOSprint(projectUserStories) }
       />
       <SprintContainer
         sprints = { projectSprints }
-        userStories = { getUserStoriesWOSprint(projectUserStories) }
+        addUserStory = { addUserStory }
+        userStories = { projectUserStories }
       />
     </div>
     )
