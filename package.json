@@ -24,6 +24,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-slide-menu": "^0.5.1",
+    "react-tag-autocomplete": "^6.1.0",
     "redux": "^4.0.5",
     "tsutils": "^3.17.1",
     "typescript": "^3.9.7"

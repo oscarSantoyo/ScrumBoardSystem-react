@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Sprint = ({ sprint }) => {
     return (
-          <div class="form-group row">
-            <label for="SprintId" class="col-sm-2 col-form-label">Sprint</label>
-            <div class="col-sm-2">
+          <div className="form-group row">
+            <label htmlFor="SprintId" className="col-sm-2 col-form-label">Sprint</label>
+            <div className="col-sm-2">
               {sprint &&
-              <a id="SprintId" className="badge badge-pill badge-primary"> {sprint.name} </a>
+              <a id="SprintId" className="badge badge-pill badge-primary p-2"> {sprint.name} </a>
               }
             </div>
           </div>
@@ -16,12 +16,12 @@ const Sprint = ({ sprint }) => {
 
 const LabelContainer = ({labels}) => {
     return (
-          <div class="form-group row">
-            <label for="SprintId" class="col-sm-2 col-form-label">Labels</label>
-            <div class="col-sm-2 center">
+          <div className="form-group row">
+            <label htmlFor="SprintId" className="col-sm-2 col-form-label">Labels</label>
+            <div className="col-sm-2 center">
               {labels && labels.map(label => {
                   return (
-                      <a key={label.id} className="badge badge-pill badge-info"> {label.name} </a>
+                      <a key={label.id} className="badge badge-pill badge-info p-2"> {label.description} </a>
                   )
               })}
             </div>
@@ -29,19 +29,25 @@ const LabelContainer = ({labels}) => {
     )
 }
 
+const Task = ({task})=>{
+  return(
+    <div key={task.id} className="input-group mb-3">
+    <div className="input-group-prepend">
+      <div className="input-group-text">
+        <input type="checkbox" aria-label="Checkbox for following text input" value={task.done}/>
+      </div>
+    </div>
+    <input type="text" className="form-control" aria-label="Text input with checkbox" value={task.description} disabled/>
+  </div>
+  )
+}
+
 const TasksContainer = ({tasks}) => {
     return (
-          <div class="form-group row align-items-center">
-            <div class="col-sm-2">Tasks</div>
+          <div className="form-group row align-items-center">
+            <div className="col-sm-2">Tasks</div>
             {tasks && tasks.map(task => (
-                <div key={task.id} class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">
-                      <input type="checkbox" aria-label="Checkbox for following text input"/>
-                    </div>
-                  </div>
-                  <input type="text" class="form-control" aria-label="Text input with checkbox"/>
-                </div>
+              <Task key={task.id} task={task}/>
             ))}
           </div>
     )
@@ -61,22 +67,22 @@ const UserStory = (props) => {
       </div>
       <div id={`collapse${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div className="card-body">
-          <div class="form-group row">
-            <label for="title" class="col-sm-2 col-form-label">Title</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control-plaintext" id="description" value={title}/>
+          <div className="form-group row">
+            <label htmlFor="title" className="col-sm-2 col-form-label">Title</label>
+            <div className="col-sm-10">
+              <input type="text" className="form-control-plaintext" id="description" value={title} readOnly/>
             </div>
           </div>
-          <div class="form-group row">
-            <label for="description" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-10">
-              <input type="textarea" readOnly class="form-control-plaintext" id="description" value={description}/>
+          <div className="form-group row">
+            <label htmlFor="description" className="col-sm-2 col-form-label">Description</label>
+            <div className="col-sm-10">
+              <input type="textarea" readOnly className="form-control-plaintext" id="description" value={description}/>
             </div>
           </div>
-          <div class="form-group row">
-            <label for="weight" class="col-sm-2 col-form-label">Weight</label>
-            <div class="col-sm-10">
-              <input type="text" readOnly class="form-control-plaintext" id="weight" value={weight}/>
+          <div className="form-group row">
+            <label htmlFor="weight" className="col-sm-2 col-form-label">Weight</label>
+            <div className="col-sm-10">
+              <input type="text" readOnly className="form-control-plaintext" id="weight" value={weight}/>
             </div>
           </div>
           <Sprint sprint={sprint} />

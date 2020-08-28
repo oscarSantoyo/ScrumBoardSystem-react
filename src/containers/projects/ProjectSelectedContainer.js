@@ -67,7 +67,7 @@ const UserStoriesContainer = (props) => {
         handleShow = {handleShow}
       />
 
-      <div class="accordion" id="accordionExample">
+      <div className="accordion" id="accordionExample">
         {userStories && userStories.map(userStory => {
           return (
             <UserStory key={userStory.id} {...userStory}/>
