@@ -1,19 +1,24 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Modal, Form, FormControl, InputGroup, Dropdown, DropdownButton } from 'react-bootstrap'
-import { useForm } from 'react-hook-form'
+import { useForm,useFieldArray } from 'react-hook-form'
 import { connect } from 'react-redux'
-import { addUserStory } from '../../actions/userstories'
+import { addUserStory,getUserstories } from '../../actions/userstories'
+import {fetchLabels} from '../../actions/labels'
+import ReactTags from 'react-tag-autocomplete'
+
 
 const Sprint = ({sprint, sprints, register }) => {
   console.log('Sprints', sprints)
   const [sprintValue, setSprintValue] = useState(sprint?.name)
+  const [sprintId, setSprintId] = useState(sprint?.id)
 
   const onChange = (change) => {console.log('This changed', change)
+                               setSprintId(change)
                                setSprintValue(sprints.find(spr => spr.id == change).name)
                               }
     return (
       <div className="form-group row">
-        <InputGroup>
+        <InputGroup className="col-sm-2">
           <DropdownButton
             as={InputGroup.Prepend}
             variant="outline-secondary"
@@ -26,67 +31,114 @@ const Sprint = ({sprint, sprints, register }) => {
             ))}
           </DropdownButton>
 
-          <div className="col-sm-2">
+          <div className="col-sm-3">
             {sprintValue &&
              <a id="SprintId" className="badge badge-pill badge-primary"> {sprintValue} </a>
             }
           </div>
-          <FormControl type="text" readOnly hidden aria-describedby="basic-addon1" ref={register} name="sprint" value={ sprintValue } />
+          <FormControl type="text" readOnly hidden aria-describedby="basic-addon1" ref={register} name="sprint.id" value={ sprintId } />
         </InputGroup>
       </div>
     )
 }
 
-const LabelContainer = ({labels}) => {
+function TagComponent({ tag, removeButtonText, onDelete }) {
+  return (
+    <a  title={removeButtonText} onClick={onDelete} className="badge badge-pill badge-info">
+      {tag.name}
+    </a>
+  )
+}
+
+
+
+const LabelContainer = ({labels,setLabelTag}) => {
+
+    const [suggestions, setSuggestions] = useState(labels.map(label=>{return {id:label.id , name:label.description}}))
+    const [tags,setTags]=useState([])
+
+    const onDelete=(index)=>{
+      setTags(tags.filter((tags,i)=> index!=i))
+    }
+
+    const onAddition =(tag) =>{
+      if(!tags.includes(tag)){
+        setLabelTag(tag)
+        setTags([...tags,tag])
+      }
+       
+    }
     return (
       <div class="form-group row">
-        <label for="SprintId" class="col-sm-2 col-form-label">Labels</label>
-        <div class="col-sm-2 center">
-          {labels && labels.map(label => {
-            return (
-              <a key={label.id} className="badge badge-pill badge-info"> {label.name} </a>
-            )
-          })}
+        <label for="Labels" class="col-sm-2 col-form-label">Labels</label>
+        <div class="center">
+        <ReactTags
+        style={{color: "red"}}
+        tags={tags}
+        removeButtonText="remove label"
+        onAddition={onAddition}
+        onDelete={onDelete}
+        allowNew="true"
+        autoresize={false}
+        name="labels"
+        placeholderText="Add a label"
+        allowBackspace="false"
+        suggestions={suggestions}/>
         </div>
       </div>
     )
 }
 
-const Task = ({task, onChange}) => {
+const Task = ({task, onChange,register,index,onEnterPressed}) => {
   const [taskState, setTaskState] = useState(task)
+  
+  const handleKey=(event)=>{
+    if(event.key==='Enter'){
+      onEnterPressed()
+    }
+  }
   return (
-    <div key={taskState?.id} class="input-group mb-3">
+    <div key={taskState?.id} class="input-group w-100 mt-2 ml-3 mr-3">
       <div class="input-group-prepend">
         <div class="input-group-text">
-          <input type="checkbox" aria-label="Checkbox for following text input" checked={taskState?.done}/>
+          <input type="checkbox" aria-label="Checkbox for following text input" checked={taskState?.done} name={`tasks[${index}].done`} ref={register}/>
         </div>
       </div>
-      <input type="text" class="form-control" aria-label="Text input with checkbox" value={taskState?.description}/>
+      <input type="text" class="form-control" aria-label="Text input with checkbox" value={taskState?.description} name={`tasks[${index}].description`} ref={register} onKeyDown={handleKey}/>
     </div>
   )
 }
-const TasksContainer = ({tasks}) => {
-  const tasksMutated = [{id:12, description: 'task 12', done:true }
-                        , {id:1, description: 'task 1', done: false}]
-  console.log('mutated', tasksMutated)
+const TasksContainer = ({tasks,register}) => {
+  const [tasksMutated,setTaskMutated]=useState(!!tasks?tasks:[{}])
+  const newTaskEnter=()=>{
+    setTaskMutated([...tasksMutated,{}])
+  }
     return (
-      <div class="form-group row align-items-center">
+      <div class="form-group row">
         <div class="col-sm-2">Tasks</div>
-        {tasksMutated && tasksMutated.map(task => (
-          <Task
-          task={task}/>
+        {tasksMutated && tasksMutated.map((task,index) => (
+          <>
+          <div className="col-sm-2"></div>
+          <Task key={task.id}
+          task={task} register={register} index={index} onEnterPressed={newTaskEnter}/>
+          </>
         ))}
-        <Task/>
+        
       </div>
     )
 }
 
 const UserStory = (props) => {
-  const {title, description, weight, labels, tasks, sprint, sprints, id, onSubmit } = props
-  const { handleSubmit, register, error} = useForm()
+  const {title, description, weight, labels, tasks, sprint, sprints, id, onSubmit,setLabelTag } = props
+  const { handleSubmit, register, error,control} = useForm()
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control,
+    name: "tasks"
+  }); 
+
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div class="form-group row">
           <label for="title" class="col-sm-2 col-form-label">Title</label>
           <div class="col-sm-10">
@@ -106,29 +158,43 @@ const UserStory = (props) => {
         </div>
       </div>
       <Sprint sprint={sprint} sprints={sprints} register={register} />
-      <LabelContainer labels={labels}/>
-      <TasksContainer tasks={tasks}/>
-      <input type="submit" className="btn btn-primary" value="ADD"/>
+      <LabelContainer labels={labels} setLabelTag={setLabelTag} />
+      <TasksContainer tasks={tasks} register={register}/>
+      <input type="button" onClick={handleSubmit(onSubmit)} className="btn btn-primary" value="ADD"/>
     </form>
         </>
   )
 }
-const AddUserStory = ({project, sprints, show, handleClose, handleShow, addUserStory})=> {
+const AddUserStory = ({project, sprints,labels, show, handleClose, handleShow, addUserStory,fetchLabels})=> {
+  const [labelTags,setLabelTags]=useState([])
+
   const onSubmit = (values) => {
-    console.log('values',  values)
-    //handleClose()
-    //addUserStory(project.id, values)
+    values.labels=labelTags.map(tag=>{return {id:tag.id,description:tag.name}})
+    handleClose()
+    addUserStory(project.id, values)
+    setLabelTags([])
+
   }
+
+  const setLabelTag=(labelTag)=>{
+    setLabelTags([...labelTags,labelTag])
+  }
+
+  useEffect(()=>{
+    fetchLabels()
+  },[])
   return (
       <Modal show={show} onHide={handleClose}
              size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Add a User Story</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <UserStory
             onSubmit={onSubmit}
             sprints={sprints}
+            labels={labels}
+            setLabelTag={setLabelTag}
           />
         </Modal.Body>
         <Modal.Footer>
@@ -143,10 +209,12 @@ const AddUserStory = ({project, sprints, show, handleClose, handleShow, addUserS
 const mapStateToProps = (state) => ({
   project: state.projects.project,
   sprints: state.sprints,
+  labels:  state.labels.labels
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  addUserStory: (projectId, values) => dispatch(addUserStory(dispatch, projectId, values))
+  addUserStory: (projectId, values) => dispatch(addUserStory(dispatch, projectId, values)),
+  fetchLabels:()=>dispatch(fetchLabels(dispatch))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddUserStory);
