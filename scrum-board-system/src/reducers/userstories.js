@@ -11,7 +11,7 @@ const userstories = (state = [], action) => {
         case 'DELETE_USER_STORY':
             return state
         case 'DELETED_USER_STORY':
-            return state.filter(story=>story.id!==action.userStoryId)
+            return state
         default:
             return state
     }

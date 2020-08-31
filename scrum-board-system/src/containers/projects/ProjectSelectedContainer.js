@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { selectProject } from '../../actions/projects'
-import { getUserstories } from '../../actions/userstories'
+import { getUserstories, deleteUserstory } from '../../actions/userstories'
 import { getSprints } from '../../actions/sprints'
 import UserStory from '../../components/userstories/UserStory'
 import AddUserStoryModal from '../../components/userstories/AddUserStoryModal'
@@ -51,7 +51,7 @@ const SprintContainer = (props) => {
 }
 
 const UserStoriesContainer = (props) => {
-  const { title, userStories }  = props
+  const { title, userStories,deleteUserstory,projectId }  = props
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -70,7 +70,7 @@ const UserStoriesContainer = (props) => {
       <div className="accordion" id="accordionExample">
         {userStories && userStories.map(userStory => {
           return (
-            <UserStory key={userStory.id} {...userStory}/>
+            <UserStory key={userStory.id} {...userStory} deleteUserstory={deleteUserstory} projectId={projectId}/>
           )
         })}
       </div>
@@ -81,7 +81,7 @@ const UserStoriesContainer = (props) => {
 const getUserStoriesWOSprint = (userStories) => userStories && userStories.filter(userStory => !userStory.sprint)
 const ProjectSelectedContainer = (props) => {
   const { getUserStoriesByProjectId, getSprintsByProjectId, addUserStory,
-          projectUserStories, project, projects, projectSprints, selectProjectState } = props
+          projectUserStories, project, projects, projectSprints, selectProjectState,deleteUserstory } = props
   const {projectId} = useRouteMatch().params
 
   useEffect(()=>{
@@ -98,11 +98,14 @@ const ProjectSelectedContainer = (props) => {
       <UserStoriesContainer
         title="Backlog"
         addUserStory={addUserStory}
+        deleteUserstory={deleteUserstory}
+        projectId={projectId}
         userStories = { getUserStoriesWOSprint(projectUserStories) }
       />
       <SprintContainer
         sprints = { projectSprints }
         addUserStory = { addUserStory }
+        deleteUserstory={deleteUserstory}
         userStories = { projectUserStories }
       />
     </div>
@@ -123,7 +126,8 @@ const mapDispatchToProps = dispatch => ({
   getUserStoriesByProjectId: (projectId) => dispatch(getUserstories(dispatch, projectId)),
   getSprintsByProjectId: (projectId) => dispatch(getSprints(dispatch, projectId)),
   addUserStory: (projectId) => console.log('Create new userStory', projectId),
-  getTasksByUserStoryId: (userStoryId) => console.log('Get tasks by userStory id')
+  getTasksByUserStoryId: (userStoryId) => console.log('Get tasks by userStory id'),
+  deleteUserstory:(projectId,userStoryId)=>dispatch(deleteUserstory(dispatch,projectId,userStoryId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectSelectedContainer);
