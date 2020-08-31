@@ -38,14 +38,15 @@ export const deleteUserstory=(dispatch,projectId,userStoryId)=>{
     axios.delete(`/apiprojects/projects/${projectId}/userstories/${userStoryId}`)
     .then(res=>{
         if(res.status){
-            dispatch(deletedUserstory(userStoryId))
+            dispatch(deletedUserstory(dispatch,projectId))
         }})
     return {
         type:"DETELE_USER_STORY"
     }
 }
 
-const deletedUserstory=(projectId,userStoryId)=>({
-    type:"DELETED_USER_STORY",
-    userStoryId
-})
+const deletedUserstory=(dispatch,projectId)=>{
+    dispatch(getUserstories(dispatch,projectId))
+    return{
+    type:"DELETED_USER_STORY"
+}}
