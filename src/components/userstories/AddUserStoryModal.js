@@ -8,11 +8,10 @@ import ReactTags from 'react-tag-autocomplete'
 
 
 const Sprint = ({sprint, sprints, register }) => {
-  console.log('Sprints', sprints)
   const [sprintValue, setSprintValue] = useState(sprint?.name)
   const [sprintId, setSprintId] = useState(sprint?.id)
 
-  const onChange = (change) => {console.log('This changed', change)
+  const onChange = (change) => {
                                setSprintId(change)
                                setSprintValue(sprints.find(spr => spr.id == change).name)
                               }
@@ -52,10 +51,10 @@ function TagComponent({ tag, removeButtonText, onDelete }) {
 
 
 
-const LabelContainer = ({labels,setLabelTag}) => {
-
-    const [suggestions, setSuggestions] = useState(labels.map(label=>{return {id:label.id , name:label.description}}))
-    const [tags,setTags]=useState([])
+const LabelContainer = ({labels,labelsCatalog,setLabelTagsHandler}) => {
+    const selectedLabels=(labels||[]).map(label=>{return {id:label.id , name:label.description}})
+    const [suggestions, setSuggestions] = useState(labelsCatalog.map(label=>{return {id:label.id , name:label.description}}))
+    const [tags,setTags]=useState(selectedLabels)
 
     const onDelete=(index)=>{
       setTags(tags.filter((tags,i)=> index!=i))
@@ -63,11 +62,14 @@ const LabelContainer = ({labels,setLabelTag}) => {
 
     const onAddition =(tag) =>{
       if(!tags.includes(tag)){
-        setLabelTag(tag)
         setTags([...tags,tag])
       }
-       
+      
     }
+
+    useEffect(()=>{
+      setLabelTagsHandler(tags)
+    },[tags])
     return (
       <div class="form-group row">
         <label for="Labels" class="col-sm-2 col-form-label">Labels</label>
@@ -99,12 +101,13 @@ const Task = ({task, onChange,register,index,onEnterPressed}) => {
   }
   return (
     <div key={taskState?.id} class="input-group w-100 mt-2 ml-3 mr-3">
+      <FormControl type="text" readOnly hidden name={`tasks[${index}].id`} value={task.id} ref={register}/>
       <div class="input-group-prepend">
         <div class="input-group-text">
           <input type="checkbox" aria-label="Checkbox for following text input" checked={taskState?.done} name={`tasks[${index}].done`} ref={register}/>
         </div>
       </div>
-      <input type="text" class="form-control" aria-label="Text input with checkbox" value={taskState?.description} name={`tasks[${index}].description`} ref={register} onKeyDown={handleKey}/>
+      <input type="text" class="form-control" aria-label="Text input with checkbox" defaultValue={taskState?.description} name={`tasks[${index}].description`} ref={register} onKeyDown={handleKey}/>
     </div>
   )
 }
@@ -129,43 +132,47 @@ const TasksContainer = ({tasks,register}) => {
 }
 
 const UserStory = (props) => {
-  const {title, description, weight, labels, tasks, sprint, sprints, id, onSubmit,setLabelTag } = props
+  const { sprints,userStoryEdit, onSubmit,setLabelTagsHandler } = props
+  const labelsCatalog=props.labels
+  const {title,description,weight, labels, tasks, sprint, id } = userStoryEdit
   const { handleSubmit, register, error,control} = useForm()
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
     control,
     name: "tasks"
   }); 
 
+
   return (
     <>
       <form>
+      <FormControl type="text" readOnly hidden ref={register} name="id" id="id" value={ id } />
         <div class="form-group row">
           <label for="title" class="col-sm-2 col-form-label">Title</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" ref={register} name="title" id="title" value={title}/>
+            <input type="text" class="form-control" ref={register} name="title" id="title" defaultValue={title}/>
           </div>
         </div>
         <div class="form-group row">
           <label for="description" class="col-sm-2 col-form-label">Description</label>
           <div class="col-sm-10">
-            <input type="textarea" class="form-control" ref={register} name="description" id="description" value={description}/>
+            <input type="textarea" class="form-control" ref={register} name="description" id="description" defaultValue={description} />
           </div>
         </div>
         <div class="form-group row">
         <label for="weight" class="col-sm-2 col-form-label">Weight</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" ref={register} name="weight" id="weight" value={weight}/>
+          <input type="text" class="form-control" ref={register} name="weight" id="weight" defaultValue={weight}/>
         </div>
       </div>
       <Sprint sprint={sprint} sprints={sprints} register={register} />
-      <LabelContainer labels={labels} setLabelTag={setLabelTag} />
+      <LabelContainer labels={labels} labelsCatalog={labelsCatalog} setLabelTagsHandler={setLabelTagsHandler} />
       <TasksContainer tasks={tasks} register={register}/>
-      <input type="button" onClick={handleSubmit(onSubmit)} className="btn btn-primary" value="ADD"/>
+      <input type="button" onClick={handleSubmit(onSubmit)} className="btn btn-primary" value={(id!=null)?"SAVE":"ADD"}/>
     </form>
         </>
   )
 }
-const AddUserStory = ({project, sprints,labels, show, handleClose, handleShow, addUserStory,fetchLabels})=> {
+const AddUserStory = ({project, sprints,labels,userStoryEdit, show, handleClose, addUserStory,fetchLabels})=> {
   const [labelTags,setLabelTags]=useState([])
 
   const onSubmit = (values) => {
@@ -173,11 +180,10 @@ const AddUserStory = ({project, sprints,labels, show, handleClose, handleShow, a
     handleClose()
     addUserStory(project.id, values)
     setLabelTags([])
-
   }
 
-  const setLabelTag=(labelTag)=>{
-    setLabelTags([...labelTags,labelTag])
+  const setLabelTagsHandler=(labelTags)=>{
+    setLabelTags(labelTags)
   }
 
   useEffect(()=>{
@@ -191,10 +197,11 @@ const AddUserStory = ({project, sprints,labels, show, handleClose, handleShow, a
         </Modal.Header>
         <Modal.Body>
           <UserStory
+            userStoryEdit={userStoryEdit}
             onSubmit={onSubmit}
             sprints={sprints}
             labels={labels}
-            setLabelTag={setLabelTag}
+            setLabelTagsHandler={setLabelTagsHandler}
           />
         </Modal.Body>
         <Modal.Footer>

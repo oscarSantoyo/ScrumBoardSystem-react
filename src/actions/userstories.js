@@ -3,8 +3,7 @@ import axios from 'axios'
 export const getUserstories=(dispatch,projectId)=>{
     axios.get(`/apiprojects/projects/${projectId}/userstories`)
     .then(res=>res.data)
-    .then(userstories=>{ 
-        console.log("HISTORIAS",userstories)
+    .then(userstories=>{    
         dispatch(fetchedUserstories(userstories))})
     return {
         type:"FETCH_USER_STORIES"

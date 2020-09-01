@@ -53,9 +53,15 @@ const SprintContainer = (props) => {
 const UserStoriesContainer = (props) => {
   const { title, userStories,deleteUserstory,projectId }  = props
   const [show, setShow] = useState(false);
+  const [userStoryEdit,setUserStoryEdit] = useState({});
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const setUserStoryEditHandler=(userStory)=>{
+    setUserStoryEdit(userStory)
+    handleShow()
+  }
 
   return (
     <div>
@@ -63,6 +69,7 @@ const UserStoriesContainer = (props) => {
 
       <AddUserStoryModal
         show={show}
+        userStoryEdit={userStoryEdit}
         handleClose={handleClose}
         handleShow = {handleShow}
       />
@@ -70,7 +77,13 @@ const UserStoriesContainer = (props) => {
       <div className="accordion" id="accordionExample">
         {userStories && userStories.map(userStory => {
           return (
-            <UserStory key={userStory.id} {...userStory} deleteUserstory={deleteUserstory} projectId={projectId}/>
+            <UserStory key={userStory.id} 
+            userStory={userStory}
+            deleteUserstory={deleteUserstory} 
+            projectId={projectId} 
+            handleShow={handleShow} 
+            handleClose={handleClose}
+            setUserStoryEditHandler={setUserStoryEditHandler}/>
           )
         })}
       </div>
