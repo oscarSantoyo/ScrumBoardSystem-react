@@ -1,5 +1,6 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FormControl } from 'react-bootstrap'
 
 const Sprint = ({ sprint }) => {
   return (
@@ -54,7 +55,8 @@ const TasksContainer = ({ tasks }) => {
 }
 
 const UserStory = (props) => {
-  const { title, description, weight, labels, tasks, sprint, id,deleteUserstory,projectId } = props
+  const { userStory,deleteUserstory,projectId,handleShow,setUserStoryEditHandler } = props
+  const {title,description,weight,labels,tasks,sprint,id} =userStory
   return (
     <div className="card">
       <div className="card-header" id="headingOne">
@@ -89,7 +91,7 @@ const UserStory = (props) => {
           <LabelContainer labels={labels} />
           <TasksContainer tasks={tasks} />
           <div class="card-body text-right">
-            <button  class="btn btn-primary mr-2" ><FontAwesomeIcon icon="edit" ></FontAwesomeIcon>Edit</button>
+            <button  class="btn btn-primary mr-2" onClick={()=>setUserStoryEditHandler(userStory)} ><FontAwesomeIcon icon="edit" ></FontAwesomeIcon>Edit</button>
             <button  class="btn btn-danger" onClick={()=>deleteUserstory(projectId,id)}><FontAwesomeIcon icon="trash" ></FontAwesomeIcon>Delete</button>
           </div>
         </div>
