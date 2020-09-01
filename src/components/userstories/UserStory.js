@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FormControl } from 'react-bootstrap'
-
+import { Button, Modal } from 'react-bootstrap'
 const Sprint = ({ sprint }) => {
   return (
     <div className="form-group row">
@@ -55,10 +54,22 @@ const TasksContainer = ({ tasks }) => {
 }
 
 const UserStory = (props) => {
-  const { userStory,deleteUserstory,projectId,handleShow,setUserStoryEditHandler } = props
-  const {title,description,weight,labels,tasks,sprint,id} =userStory
+  const { userStory, deleteUserstory, projectId, setUserStoryEditHandler } = props
+  const { title, description, weight, labels, tasks, sprint, id } = userStory
+  const [showModal, setShowModal] = useState(false)
+
+  const handleShowModal = () => setShowModal(true)
+  const handleClose = () => setShowModal(false)
+
   return (
     <div className="card">
+      <ConfirmationModal
+        showModal={showModal}
+        projectId={projectId}
+        deleteUserstory={deleteUserstory}
+        userStoryId={id}
+        handleClose={handleClose} />
+
       <div className="card-header" id="headingOne">
         <h2 className="mb-0">
           <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
@@ -91,13 +102,37 @@ const UserStory = (props) => {
           <LabelContainer labels={labels} />
           <TasksContainer tasks={tasks} />
           <div class="card-body text-right">
-            <button  class="btn btn-primary mr-2" onClick={()=>setUserStoryEditHandler(userStory)} ><FontAwesomeIcon icon="edit" ></FontAwesomeIcon>Edit</button>
-            <button  class="btn btn-danger" onClick={()=>deleteUserstory(projectId,id)}><FontAwesomeIcon icon="trash" ></FontAwesomeIcon>Delete</button>
+            <button class="btn btn-primary mr-2" onClick={() => setUserStoryEditHandler(userStory)} ><FontAwesomeIcon icon="edit" ></FontAwesomeIcon>Edit</button>
+            <button class="btn btn-danger" onClick={() => handleShowModal()}><FontAwesomeIcon icon="trash" ></FontAwesomeIcon>Delete</button>
           </div>
         </div>
       </div>
     </div>
   )
 }
+
+
+const ConfirmationModal = ({ showModal,userStoryId,projectId,deleteUserstory, handleClose }) => {
+  const handleDeleteUserStory=()=>{
+    deleteUserstory(projectId,userStoryId)
+    handleClose()
+  }
+  return (
+    <Modal show={showModal} onHide={handleClose}
+      size="lg">
+      <Modal.Header closeButton>
+        <Modal.Title>Are you sure you want to delete this item?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>The User Story will be eliminated and all the information related to it</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>Close</Button>
+        <Button variant="danger" onClick={handleDeleteUserStory}>Delete</Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
 
 export default UserStory

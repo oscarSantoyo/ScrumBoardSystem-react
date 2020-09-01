@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import { Button, Modal, Form, FormControl, InputGroup, Dropdown, DropdownButton } from 'react-bootstrap'
+import { Button, Modal, FormControl, InputGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { useForm,useFieldArray } from 'react-hook-form'
 import { connect } from 'react-redux'
-import { addUserStory,getUserstories } from '../../actions/userstories'
+import { addUserStory } from '../../actions/userstories'
 import {fetchLabels} from '../../actions/labels'
 import ReactTags from 'react-tag-autocomplete'
 
@@ -23,8 +23,7 @@ const Sprint = ({sprint, sprints, register }) => {
             variant="outline-secondary"
             title="Sprint"
             id="input-group-dropdown-1"
-            onSelect={onChange}
-          >
+            onSelect={onChange}>
             {sprints && sprints.map(sprintObj => (
               <Dropdown.Item key={sprintObj.id} eventKey={sprintObj.id}> {sprintObj.name}</Dropdown.Item>
             ))}
@@ -40,16 +39,6 @@ const Sprint = ({sprint, sprints, register }) => {
       </div>
     )
 }
-
-function TagComponent({ tag, removeButtonText, onDelete }) {
-  return (
-    <a  title={removeButtonText} onClick={onDelete} className="badge badge-pill badge-info">
-      {tag.name}
-    </a>
-  )
-}
-
-
 
 const LabelContainer = ({labels,labelsCatalog,setLabelTagsHandler}) => {
     const selectedLabels=(labels||[]).map(label=>{return {id:label.id , name:label.description}})
@@ -91,7 +80,7 @@ const LabelContainer = ({labels,labelsCatalog,setLabelTagsHandler}) => {
     )
 }
 
-const Task = ({task, onChange,register,index,onEnterPressed}) => {
+const Task = ({task,register,index,onEnterPressed}) => {
   const [taskState, setTaskState] = useState(task)
   
   const handleKey=(event)=>{
@@ -174,7 +163,7 @@ const UserStory = (props) => {
 }
 const AddUserStory = ({project, sprints,labels,userStoryEdit, show, handleClose, addUserStory,fetchLabels})=> {
   const [labelTags,setLabelTags]=useState([])
-
+  const {id}=userStoryEdit
   const onSubmit = (values) => {
     values.labels=labelTags.map(tag=>{return {id:tag.id,description:tag.name}})
     handleClose()
@@ -193,7 +182,7 @@ const AddUserStory = ({project, sprints,labels,userStoryEdit, show, handleClose,
       <Modal show={show} onHide={handleClose}
              size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Add a User Story</Modal.Title>
+          <Modal.Title>{(id!=null)?"Edit User Story":"Add a User Story"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <UserStory
