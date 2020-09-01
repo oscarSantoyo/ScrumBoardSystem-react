@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouteMatch } from 'react-router-dom'
 
 const Sprint = (props) => {
-  const { name, id, userStories } = props
+  const { name, id, userStories,projectId,deleteUserstory } = props
   return (
     <div className="card">
     <div className="card-header" id="headingOne">
@@ -23,7 +23,11 @@ const Sprint = (props) => {
 
       <div id={`collapseSprint${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#sprints">
       <div className="card-body">
-        <UserStoriesContainer title={`User Stories of Sprint ${name}`} userStories={userStories}/>
+        <UserStoriesContainer 
+        title={`User Stories of Sprint ${name}`} 
+        userStories={userStories} 
+        deleteUserstory={deleteUserstory}
+        projectId={projectId}/>
       </div>
     </div>
   </div>
@@ -31,7 +35,7 @@ const Sprint = (props) => {
 }
 
 const SprintContainer = (props) => {
-  const { sprints, userStories } = props;
+  const { sprints, userStories,deleteUserstory,projectId } = props;
   const mutatedSprints = sprints.map(sprint => {
     const us = userStories.filter(userStory => (userStory.sprint || {}).id == sprint.id)
     return {...sprint, ...{userStories: us}}
@@ -42,7 +46,11 @@ const SprintContainer = (props) => {
       <div className="accordion" id="sprints">
     {mutatedSprints && mutatedSprints.map(sprint => {
       return (
-        <Sprint key={sprint.id} {...sprint}/>
+        <Sprint key={sprint.id} 
+        {...sprint} 
+        deleteUserstory={deleteUserstory}
+        projectId={projectId}
+        />
       )
     })}
     </div>
@@ -112,20 +120,21 @@ const ProjectSelectedContainer = (props) => {
         title="Backlog"
         addUserStory={addUserStory}
         deleteUserstory={deleteUserstory}
-        projectId={projectId}
         userStories = { getUserStoriesWOSprint(projectUserStories) }
+        projectId={projectId}
       />
       <SprintContainer
         sprints = { projectSprints }
         addUserStory = { addUserStory }
         deleteUserstory={deleteUserstory}
         userStories = { projectUserStories }
+        projectId={projectId}
       />
     </div>
     )
 }
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state) => {
   return {
     projects: state.projects.projects,
     project: state.projects.project,
