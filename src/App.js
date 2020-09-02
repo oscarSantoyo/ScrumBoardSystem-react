@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrash, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from 'react'
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faTrash, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons"
 import { connect } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
-import './App.css';
+import './App.css'
 
 import { getProjects as actionGetProjects } from './actions/projects'
-import ProjectContainer from './containers/projects/ProjectContainer';
+//import {SideBarContainer,ProjectSelectedContainer} from './containers/'
 import ProjectSelectedContainer from './containers/projects/ProjectSelectedContainer'
-import UserStoryContainer  from './containers/userstories/UserStoryContainer';
-import SprintContainer  from './containers/sprints/SprintContainer';
 import SideBarContainer from './containers/sidebar/SideBarContainer'
 
-library.add(faTrash, faEdit, faPlus);
+library.add(faTrash, faEdit, faPlus)
 const WelcomeComponent = () => (<h1>Welcome!</h1>)
 
 const getProjectsNav = (projects) => {
-  if(!projects) return [];
+  if(!projects) return []
 
   return projects.map(project => ({id: project.id, name: project.name, href: `/project/${project.id}`}))
 }
 const App = (props) => {
-  const {getProjects, projects} = props;
+  const {getProjects, projects} = props
   const entries = [
     {id: 'projects', name: 'Projects',
      subMenu: getProjectsNav(projects)}
@@ -45,7 +43,7 @@ const App = (props) => {
         </Switch>
       </div>
     </div>
-  );
+  )
 }
 
 
@@ -58,4 +56,4 @@ const mapDispatchToProps = dispatch=> ({
     getProjects:()=>dispatch(actionGetProjects(dispatch))
 })
 
-export default  connect(mapStateToProps, mapDispatchToProps)(App);
+export default  connect(mapStateToProps, mapDispatchToProps)(App)
