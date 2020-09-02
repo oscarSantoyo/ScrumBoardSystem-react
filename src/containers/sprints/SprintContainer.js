@@ -1,6 +1,6 @@
 import React ,{useEffect} from 'react'
 import { connect } from 'react-redux'
-import { getSprints , deleteSprint } from '../../actions/sprints'
+import { getSprints , deleteSprint } from '../../actions/'
 import { AddSprint } from './AddSprint'
 import SprintList from '../../components/sprints/SprintList'
 

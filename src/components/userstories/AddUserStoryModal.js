@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal, FormControl, InputGroup, Dropdown, DropdownButton, Form } from 'react-bootstrap'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { connect } from 'react-redux'
-import { addUserStory } from '../../actions/userstories'
-import { fetchLabels } from '../../actions/labels'
+import { addUserStory,fetchLabels } from '../../actions/'
 import ReactTags from 'react-tag-autocomplete'
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import {getUserstories, deleteUserstory} from '../../actions/userstories'
+import {getUserstories, deleteUserstory} from '../../actions/'
 import UserstoryList from '../../components/userstories/UserstoryList'
 import AddUserstory from './AddUserstory'
 

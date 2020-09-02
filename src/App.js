@@ -7,9 +7,7 @@ import { Route, Switch } from 'react-router-dom'
 import './App.css'
 
 import { getProjects as actionGetProjects } from './actions/projects'
-//import {SideBarContainer,ProjectSelectedContainer} from './containers/'
-import ProjectSelectedContainer from './containers/projects/ProjectSelectedContainer'
-import SideBarContainer from './containers/sidebar/SideBarContainer'
+import {ProjectSelectedContainer,SideBarContainer} from './containers/'
 
 library.add(faTrash, faEdit, faPlus)
 const WelcomeComponent = () => (<h1>Welcome!</h1>)

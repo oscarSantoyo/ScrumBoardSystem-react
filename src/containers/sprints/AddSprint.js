@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import { connect } from 'react-redux'
-import { addSprint } from '../../actions/sprints'
+import { addSprint } from '../../actions/'
 import { useForm } from 'react-hook-form'
 // import { Formik, Field, Form, ErrorMessage,withFormik } from 'formik';
 

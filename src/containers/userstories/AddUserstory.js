@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addUserStory } from '../../actions/userstories'
+import { addUserStory } from '../../actions/'
 
 export const AddUserstory = ({ projectId,addUserStory }) => {
 

@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import AddProject from './AddProject'
 import ProjectList from '../../components/projects/ProjectList'
-import { getProjects,deleteProject} from '../../actions/projects'
-import { setCurrentProject} from '../../actions/global'
+import { getProjects,deleteProject,setCurrentProject} from '../../actions/'
 
 
 export const ProjectContainer = ({projects,currentProjectId,getProjects,deleteProject,setCurrentProject}) => {

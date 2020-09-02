@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {addProject} from '../../actions/projects'
+import {addProject} from '../../actions/'
 
 const AddProject= ({dispatch})=>{
     let input

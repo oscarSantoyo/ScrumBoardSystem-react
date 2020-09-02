@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 const store=createStore(reducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-const Project = () => <div> <h1> Hola</h1> </div>
+
 render(
   <Provider store={store}>
       <Router>
