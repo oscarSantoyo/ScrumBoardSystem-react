@@ -15,7 +15,7 @@ const Sprint = (props) => {
     <div className="card-header" id="headingOne">
       <h2 className="mb-0">
         <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                data-target={`#collapseSprint${id}`} aria-expanded="true" aria-controls={`#collapse${id}`}>
+                data-target={`#collapseSprint${id}`} aria-expanded="false" aria-controls={`#collapse${id}`}>
           {name}
         </button>
       </h2>
@@ -101,7 +101,11 @@ const UserStoriesContainer = (props) => {
 
 const getUserStoriesWOSprint = (userStories) => userStories && userStories.filter(userStory => !userStory.sprint)
 const ProjectSelectedContainer = (props) => {
+<<<<<<< HEAD:src/containers/projects/ProjectSelectedContainer.js
   const { getUserStoriesByProjectId, getSprintsByProjectId, addUserStory,
+=======
+  const { getUserStoriesByProjectId, getSprintsByProjectId,
+>>>>>>> 2e04452eaf1b6032262ad413acbeeaf025b03ccb:scrum-board-system/src/containers/projects/ProjectSelectedContainer.js
           projectUserStories, project, projects, projectSprints, selectProjectState,deleteUserstory } = props
   const {projectId} = useRouteMatch().params
 
@@ -118,14 +122,20 @@ const ProjectSelectedContainer = (props) => {
       <h1> {project && project.name} </h1>
       <UserStoriesContainer
         title="Backlog"
+<<<<<<< HEAD:src/containers/projects/ProjectSelectedContainer.js
         addUserStory={addUserStory}
+=======
+>>>>>>> 2e04452eaf1b6032262ad413acbeeaf025b03ccb:scrum-board-system/src/containers/projects/ProjectSelectedContainer.js
         deleteUserstory={deleteUserstory}
         userStories = { getUserStoriesWOSprint(projectUserStories) }
         projectId={projectId}
       />
       <SprintContainer
         sprints = { projectSprints }
+<<<<<<< HEAD:src/containers/projects/ProjectSelectedContainer.js
         addUserStory = { addUserStory }
+=======
+>>>>>>> 2e04452eaf1b6032262ad413acbeeaf025b03ccb:scrum-board-system/src/containers/projects/ProjectSelectedContainer.js
         deleteUserstory={deleteUserstory}
         userStories = { projectUserStories }
         projectId={projectId}
@@ -139,16 +149,18 @@ const mapStateToProps = (state) => {
     projects: state.projects.projects,
     project: state.projects.project,
     projectSprints: state.sprints,
-    projectUserStories : state.userstories,
-    tasks: state.tasks
+    projectUserStories : state.userstories
 }}
 
 const mapDispatchToProps = dispatch => ({
   selectProjectState: (projectId, projects) => dispatch(selectProject(projectId, projects)),
   getUserStoriesByProjectId: (projectId) => dispatch(getUserstories(dispatch, projectId)),
   getSprintsByProjectId: (projectId) => dispatch(getSprints(dispatch, projectId)),
+<<<<<<< HEAD:src/containers/projects/ProjectSelectedContainer.js
   addUserStory: (projectId) => console.log('Create new userStory', projectId),
   getTasksByUserStoryId: (userStoryId) => console.log('Get tasks by userStory id'),
+=======
+>>>>>>> 2e04452eaf1b6032262ad413acbeeaf025b03ccb:scrum-board-system/src/containers/projects/ProjectSelectedContainer.js
   deleteUserstory:(projectId,userStoryId)=>dispatch(deleteUserstory(dispatch,projectId,userStoryId))
 })
 

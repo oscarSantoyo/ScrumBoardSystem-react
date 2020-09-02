@@ -1,55 +1,55 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal, Card, Form, InputGroup, FormControl } from 'react-bootstrap'
+
 const Sprint = ({ sprint }) => {
   return (
-    <div className="form-group row">
+    <Form.Group className="row">
       <label htmlFor="SprintId" className="col-sm-2 col-form-label">Sprint</label>
       <div className="col-sm-2">
         {sprint &&
           <a id="SprintId" className="badge badge-pill badge-primary p-2"> {sprint.name} </a>
         }
       </div>
-    </div>
+    </Form.Group>
   )
 }
 
 const LabelContainer = ({ labels }) => {
   return (
-    <div className="form-group row">
+    <Form.Group className="row">
       <label htmlFor="SprintId" className="col-sm-2 col-form-label">Labels</label>
       <div className="col-sm-2 center">
         {labels && labels.map(label => {
           return (
-            <a key={label.id} className="badge badge-pill badge-info p-2"> {label.description} </a>
+            <a key={label.id} className="badge badge-pill badge-info p-2 mt-1"> {label.description} </a>
           )
         })}
       </div>
-    </div>
+    </Form.Group>
   )
 }
 
 const Task = ({ task }) => {
   return (
-    <div key={task.id} className="input-group mb-3">
-      <div className="input-group-prepend">
-        <div className="input-group-text">
-          <input type="checkbox" aria-label="Checkbox for following text input" value={task.done} />
-        </div>
-      </div>
-      <input type="text" className="form-control" aria-label="Text input with checkbox" value={task.description} disabled />
-    </div>
+    <InputGroup key={task.id} className="mb-3">
+      <InputGroup.Prepend>
+        <InputGroup.Checkbox aria-label="Checkbox for done tasks" value={task.done}/>
+      </InputGroup.Prepend>
+      <FormControl type="text"aria-label="Task's description" value={task.description} disabled/>
+    </InputGroup>
   )
 }
 
 const TasksContainer = ({ tasks }) => {
   return (
-    <div className="form-group row align-items-center">
+    <Form.Group className="row align-items-center">
       <div className="col-sm-2">Tasks</div>
       {tasks && tasks.map(task => (
         <Task key={task.id} task={task} />
       ))}
-    </div>
+    </Form.Group>
+
   )
 }
 
@@ -62,59 +62,50 @@ const UserStory = (props) => {
   const handleClose = () => setShowModal(false)
 
   return (
-    <div className="card">
-      <ConfirmationModal
+    <Card>
+      <DeleteConfirmationModal
         showModal={showModal}
         projectId={projectId}
         deleteUserstory={deleteUserstory}
         userStoryId={id}
         handleClose={handleClose} />
-
-      <div className="card-header" id="headingOne">
+      <Card.Header id="headingOne">
         <h2 className="mb-0">
-          <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-            data-target={`#collapse${id}`} aria-expanded="true" aria-controls={`#collapse${id}`}>
-            {title}
-          </button>
+          <Button variant="link" className="text-left btn-block" data-toggle="collapse"
+            data-target={`#collapse${id}`} aria-expanded="false" aria-controls={`#collapse${id}`}>{title}</Button>
         </h2>
-      </div>
-      <div id={`collapse${id}`} className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div className="card-body">
-          <div className="form-group row">
-            <label htmlFor="title" className="col-sm-2 col-form-label">Title</label>
-            <div className="col-sm-10">
-              <input type="text" className="form-control-plaintext" id="description" value={title} readOnly />
-            </div>
-          </div>
-          <div className="form-group row">
-            <label htmlFor="description" className="col-sm-2 col-form-label">Description</label>
-            <div className="col-sm-10">
-              <input type="textarea" readOnly className="form-control-plaintext" id="description" value={description} />
-            </div>
-          </div>
-          <div className="form-group row">
-            <label htmlFor="weight" className="col-sm-2 col-form-label">Weight</label>
-            <div className="col-sm-10">
-              <input type="text" readOnly className="form-control-plaintext" id="weight" value={weight} />
-            </div>
-          </div>
+      </Card.Header>
+      <div id={`collapse${id}`} className="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <Card.Body>
+          <Form.Group className="row">
+            <Form.Label className="col-sm-2 col-form-label">Title</Form.Label>
+            <Form.Control className="col-sm-10 form-control-plaintext" type="text" id="title" value={title} />
+          </Form.Group>
+          <Form.Group className="row">
+            <Form.Label className="col-sm-2 col-form-label">Description</Form.Label>
+            <Form.Control className="col-sm-10 form-control-plaintext" type="textarea" id="description" value={description} />
+          </Form.Group>
+          <Form.Group className="row">
+            <Form.Label className="col-sm-2 col-form-label">Weight</Form.Label>
+            <Form.Control className="col-sm-10 form-control-plaintext" type="text" id="weight" value={weight} />
+          </Form.Group>
           <Sprint sprint={sprint} />
           <LabelContainer labels={labels} />
           <TasksContainer tasks={tasks} />
           <div class="card-body text-right">
-            <button class="btn btn-primary mr-2" onClick={() => setUserStoryEditHandler(userStory)} ><FontAwesomeIcon icon="edit" ></FontAwesomeIcon>Edit</button>
-            <button class="btn btn-danger" onClick={() => handleShowModal()}><FontAwesomeIcon icon="trash" ></FontAwesomeIcon>Delete</button>
+            <Button variant="primary" className="mr-2" onClick={() => setUserStoryEditHandler(userStory)}><FontAwesomeIcon icon="edit" />Edit</Button>
+            <Button variant="danger" onClick={() => handleShowModal()}><FontAwesomeIcon icon="trash" />Delete</Button>
           </div>
-        </div>
+        </Card.Body>
       </div>
-    </div>
+    </Card>
   )
 }
 
 
-const ConfirmationModal = ({ showModal,userStoryId,projectId,deleteUserstory, handleClose }) => {
-  const handleDeleteUserStory=()=>{
-    deleteUserstory(projectId,userStoryId)
+const DeleteConfirmationModal = ({ showModal, userStoryId, projectId, deleteUserstory, handleClose }) => {
+  const handleDeleteUserStory = () => {
+    deleteUserstory(projectId, userStoryId)
     handleClose()
   }
   return (
