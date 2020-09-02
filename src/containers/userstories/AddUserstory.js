@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addUserstory } from '../../actions/userstories'
+import { addUserStory } from '../../actions/userstories'
 
 export const AddUserstory = ({ projectId,addUserStory }) => {
 
@@ -56,7 +56,7 @@ const mapStateToProps = (state) => ({
     projectId: state.global.projectId
 })
 const mapDispatchToProps = dispatch=>({
-    addUserStory:(projectId,newUserstory)=>dispatch(addUserstory(dispatch,projectId,newUserstory))
+    addUserStory:(projectId,newUserstory)=>dispatch(addUserStory(dispatch,projectId,newUserstory))
 })
 
 //TODO CAMBIAR LOS REFS POR OBJECTOS(TAGS) NATIVOS DE REACT
