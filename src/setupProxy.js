@@ -1,21 +1,22 @@
-const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const express = require("express");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
-    '/apiprojects',
+    "/apiprojects",
     createProxyMiddleware({
-      target: 'http://localhost:8090',
+      target: "http://localhost:8090",
       changeOrigin: true,
-      pathRewrite:{'/apiprojects':''}
+      pathRewrite: { "/apiprojects": "" },
     })
   );
   app.use(
-    '/apiuserstories',
-    createProxyMiddleware({target:'http://localhost:8080',
-    changeOrigin:true,
-    pathRewrite:{'/apiuserstories':''}
-  })
+    "/apiuserstories",
+    createProxyMiddleware({
+      target: "http://localhost:8080",
+      changeOrigin: true,
+      pathRewrite: { "/apiuserstories": "" },
+    })
   );
 };
