@@ -28,8 +28,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = dispatch=>({
-    getUserstories:projectId=>dispatch(getUserstories(dispatch,projectId)),
-    deleteUserStory:(projectId,userStoryId)=>dispatch(deleteUserstory(dispatch,projectId,userStoryId))
+    getUserstories:currentProjectId=>dispatch(getUserstories(dispatch,currentProjectId)),
+    deleteUserStory:(currentProjectId,userStoryId)=>dispatch(deleteUserstory(dispatch,currentProjectId,userStoryId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserStoryContainer)

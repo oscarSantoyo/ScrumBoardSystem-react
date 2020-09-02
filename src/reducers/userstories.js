@@ -3,7 +3,7 @@ const userstories = (state = [], action) => {
         case 'FETCH_USERS_STORIES':
             return state
         case 'FETCHED_USER_STORIES':
-            return [...action.userstories]
+            return action.userstories
         case 'ADD_USER_STORY':
             return state
         case 'ADDED_USER_STORY':
