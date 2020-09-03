@@ -96,7 +96,7 @@ const Task = ({ task, register, index, onEnterPressed }) => {
   )
 }
 const TasksContainer = ({ tasks, register }) => {
-  const [tasksMutated, setTaskMutated] = useState(!!tasks ? tasks : [{}])
+  const [tasksMutated, setTaskMutated] = useState(!!tasks && tasks.lenght>0 ? tasks : [{}])
   const newTaskEnter = () => {
     setTaskMutated([...tasksMutated, {}])
   }
