@@ -8,7 +8,8 @@ import * as serviceWorker from "./serviceWorker";
 import reducers from "./reducers";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-const store = createStore(reducers);
+const store = createStore(reducers,
+  (process.env.NODE_ENV==="development")?window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__():"");
 
 render(
   <Provider store={store}>
