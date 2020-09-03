@@ -74,7 +74,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(addUserStory(dispatch, projectId, newUserstory)),
 });
 
-//TODO CAMBIAR LOS REFS POR OBJECTOS(TAGS) NATIVOS DE REACT
-//TODO MANDAR QUITAR EL ADD DEL SUBMIT NO USAR LOS EVENTOS DEL SUBMIT
-
 export default connect(mapStateToProps, mapDispatchToProps)(AddUserstory);

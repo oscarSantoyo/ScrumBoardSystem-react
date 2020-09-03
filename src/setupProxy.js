@@ -6,7 +6,7 @@ module.exports = function (app) {
   app.use(
     "/apiprojects",
     createProxyMiddleware({
-      target: "http://localhost:8090",
+      target: process.env.REACT_APP_URL_API_PROJECTS,
       changeOrigin: true,
       pathRewrite: { "/apiprojects": "" },
     })
@@ -14,7 +14,7 @@ module.exports = function (app) {
   app.use(
     "/apiuserstories",
     createProxyMiddleware({
-      target: "http://localhost:8080",
+      target: process.env.REACT_APP_URL_API_USER_STORIES,
       changeOrigin: true,
       pathRewrite: { "/apiuserstories": "" },
     })
