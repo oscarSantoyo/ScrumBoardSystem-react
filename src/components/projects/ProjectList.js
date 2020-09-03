@@ -1,24 +1,32 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Project from './Project'
+import React from "react";
+import PropTypes from "prop-types";
+import Project from "./Project";
 
-const ProjectList=(props)=>{
-    const projects = props.projects||[]
-   
-    return (<ul className="list-group d-flex  lign-items-start">
-        {projects.map(project=>(
-            <Project key={project.id} {...project} onDelete={props.onDelete} onSelect={props.onSelect} currentProjectId={props.currentProjectId}/>
-        ))}
-    </ul>)
-}
+const ProjectList = (props) => {
+  const projects = props.projects || [];
 
-ProjectList.propTypes={
-    projects:PropTypes.arrayOf(
-        PropTypes.shape({
-            id:PropTypes.number.isRequired,
-            name:PropTypes.string.isRequired
-        }).isRequired
-    ).isRequired,
-}
+  return (
+    <ul className="list-group d-flex  lign-items-start">
+      {projects.map((project) => (
+        <Project
+          key={project.id}
+          {...project}
+          onDelete={props.onDelete}
+          onSelect={props.onSelect}
+          currentProjectId={props.currentProjectId}
+        />
+      ))}
+    </ul>
+  );
+};
 
-export default ProjectList
+ProjectList.propTypes = {
+  projects: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
+};
+
+export default ProjectList;
