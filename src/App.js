@@ -8,7 +8,7 @@ import "./App.css";
 
 import { getProjects as actionGetProjects } from "./actions/projects";
 import { ProjectSelectedContainer, SideBarContainer } from "./containers/";
-
+import { useAlert } from "react-alert";
 library.add(faTrash, faEdit, faPlus);
 const WelcomeComponent = () => <h1>Welcome!</h1>;
 
@@ -22,16 +22,20 @@ const getProjectsNav = (projects) => {
   }));
 };
 const App = (props) => {
-  const { getProjects, projects } = props;
+  const alert = useAlert();
+  const { getProjects, projects, error } = props;
   const entries = [
     { id: "projects", name: "Projects", subMenu: getProjectsNav(projects) },
   ];
 
   useEffect(() => getProjects(), [getProjects]);
+
+  useEffect(() => {
+    if (!!error && error.message != null) alert.error(error.message);
+  }, [error]);
   return (
     <div className="wrapper">
       <SideBarContainer title="Scrum Manager" entries={entries} />
-
       <div className="App container">
         <Switch>
           <Route exact path="/" component={WelcomeComponent} />
@@ -47,6 +51,7 @@ const App = (props) => {
 
 const mapStateToProps = (state) => ({
   projects: state.projects.projects,
+  error: state.alerts.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
