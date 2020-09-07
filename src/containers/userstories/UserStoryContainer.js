@@ -29,7 +29,7 @@ export const UserStoryContainer = ({
 };
 
 const mapStateToProps = (state) => ({
-  userstories: state.userstories,
+  userstories: state.userstories.userstories,
   currentProjectId: state.global.projectId,
 });
 

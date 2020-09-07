@@ -53,7 +53,7 @@ const SprintContainer = (props) => {
   const { sprints, userStories, deleteUserstory, projectId } = props;
   const mutatedSprints = sprints.map((sprint) => {
     const us = userStories.filter(
-      (userStory) => (userStory.sprint || {}).id == sprint.id
+      (userStory) => (userStory.sprint || {}).id === sprint.id
     );
     return { ...sprint, ...{ userStories: us } };
   });
@@ -174,7 +174,7 @@ const mapStateToProps = (state) => {
     projects: state.projects.projects,
     project: state.projects.project,
     projectSprints: state.sprints,
-    projectUserStories: state.userstories,
+    projectUserStories: state.userstories.userstories,
   };
 };
 

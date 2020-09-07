@@ -7,10 +7,12 @@ import {
   Dropdown,
   DropdownButton,
   Form,
+  Badge,
+  Alert
 } from "react-bootstrap";
 import { useForm, useFieldArray } from "react-hook-form";
 import { connect } from "react-redux";
-import { addUserStory, fetchLabels } from "../../actions/";
+import { addUserStory, fetchLabels,cleanError } from "../../actions/";
 import ReactTags from "react-tag-autocomplete";
 
 const Sprint = ({ sprint, sprints, register }) => {
@@ -42,10 +44,10 @@ const Sprint = ({ sprint, sprints, register }) => {
 
         <div className="col-sm-3">
           {sprintValue && (
-            <a id="SprintId" className="badge badge-pill badge-primary">
+            <Badge id="SprintId" variant="primary">
               {" "}
               {sprintValue}{" "}
-            </a>
+            </Badge>
           )}
         </div>
         <FormControl
@@ -74,7 +76,7 @@ const LabelContainer = ({ labels, labelsCatalog, setLabelTagsHandler }) => {
   const [tags, setTags] = useState(selectedLabels);
 
   const onDelete = (index) => {
-    setTags(tags.filter((tags, i) => index != i));
+    setTags(tags.filter((tags, i) => index !== i));
   };
 
   const onAddition = (tag) => {
@@ -89,7 +91,7 @@ const LabelContainer = ({ labels, labelsCatalog, setLabelTagsHandler }) => {
   return (
     <Form.Group className="row">
       <Form.Label className="col-sm-2 col-form-label">Labels</Form.Label>
-      <div class="center">
+      <div className="center">
         <ReactTags
           tags={tags}
           removeButtonText="remove label"
@@ -144,14 +146,15 @@ const Task = ({ task, register, index, onEnterPressed }) => {
 };
 const TasksContainer = ({ tasks, register }) => {
   const [tasksMutated, setTaskMutated] = useState(
-    !!tasks && tasks.lenght > 0 ? tasks : [{}]
+    !!tasks && tasks.length > 0 ? tasks : [{}]
   );
   const newTaskEnter = () => {
     setTaskMutated([...tasksMutated, {}]);
   };
+
   return (
-    <div class="form-group row">
-      <div class="col-sm-2">Tasks</div>
+    <div className="form-group row">
+      <div className="col-sm-2">Tasks</div>
       {tasksMutated &&
         tasksMutated.map((task, index) => (
           <>
@@ -181,13 +184,11 @@ const UserStory = (props) => {
     sprint,
     id,
   } = userStoryEdit;
-  const { handleSubmit, register, error, control } = useForm();
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: "tasks",
-    }
-  );
+  const { handleSubmit, register, control } = useForm();
+  useFieldArray({
+    control,
+    name: "tasks",
+  });
 
   return (
     <Form>
@@ -251,10 +252,12 @@ const AddUserStory = ({
   sprints,
   labels,
   userStoryEdit,
+  saveSucceeded,
   show,
   handleClose,
   addUserStory,
   fetchLabels,
+  cleanError
 }) => {
   const [labelTags, setLabelTags] = useState([]);
   const { id } = userStoryEdit;
@@ -262,26 +265,37 @@ const AddUserStory = ({
     values.labels = labelTags.map((tag) => {
       return { id: tag.id, description: tag.name };
     });
-    handleClose();
     addUserStory(project.id, values);
-    setLabelTags([]);
   };
 
   const setLabelTagsHandler = (labelTags) => {
     setLabelTags(labelTags);
   };
 
+  const handlerCloser=()=>{
+    cleanError()
+    handleClose()
+  }
+
+  useEffect(()=>{
+    if(saveSucceeded){
+      handleClose();
+      setLabelTags([]);
+  }
+  },[saveSucceeded])
+
   useEffect(() => {
     fetchLabels();
   }, [fetchLabels]);
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handlerCloser} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>
           {id != null ? "Edit User Story" : "Add a User Story"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <Alert show={!saveSucceeded} variant="danger">An error has ocurred trying to save, please try again!</Alert>
         <UserStory
           userStoryEdit={userStoryEdit}
           onSubmit={onSubmit}
@@ -291,7 +305,7 @@ const AddUserStory = ({
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={handlerCloser}>
           Close
         </Button>
       </Modal.Footer>
@@ -303,12 +317,14 @@ const mapStateToProps = (state) => ({
   project: state.projects.project,
   sprints: state.sprints,
   labels: state.labels.labels,
+  saveSucceeded:state.userstories.saveSucceeded
 });
 
 const mapDispatchToProps = (dispatch) => ({
   addUserStory: (projectId, values) =>
     dispatch(addUserStory(dispatch, projectId, values)),
   fetchLabels: () => dispatch(fetchLabels(dispatch)),
+  cleanError:()=>dispatch(cleanError())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddUserStory);

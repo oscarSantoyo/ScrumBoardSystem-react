@@ -30,7 +30,7 @@ export const getProjects = (dispatch) => {
     .then((res) => res.data)
     .then((projects) => {
       dispatch(recieveProjects(projects));
-    });
+    })
   return {
     type: "FETCH_PROJECTS",
   };

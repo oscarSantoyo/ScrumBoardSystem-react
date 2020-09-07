@@ -7,6 +7,7 @@ import {
   Form,
   InputGroup,
   FormControl,
+  Badge,
 } from "react-bootstrap";
 
 const Sprint = ({ sprint }) => {
@@ -17,10 +18,10 @@ const Sprint = ({ sprint }) => {
       </label>
       <div className="col-sm-2">
         {sprint && (
-          <a id="SprintId" className="badge badge-pill badge-primary p-2">
+          <Badge id="SprintId" variant="primary" className="p-2">
             {" "}
             {sprint.name}{" "}
-          </a>
+          </Badge>
         )}
       </div>
     </Form.Group>
@@ -37,13 +38,10 @@ const LabelContainer = ({ labels }) => {
         {labels &&
           labels.map((label) => {
             return (
-              <a
-                key={label.id}
-                className="badge badge-pill badge-info p-2 mt-1"
-              >
+              <Badge key={label.id} variant="info" className="p-2 mt-1">
                 {" "}
                 {label.description}{" "}
-              </a>
+              </Badge>
             );
           })}
       </div>
@@ -127,8 +125,9 @@ const UserStory = (props) => {
             <Form.Control
               className="col-sm-10 form-control-plaintext"
               type="text"
-              id="title"
+              id={`title${id}`}
               value={title}
+              readOnly
             />
           </Form.Group>
           <Form.Group className="row">
@@ -140,6 +139,7 @@ const UserStory = (props) => {
               type="textarea"
               id="description"
               value={description}
+              readOnly
             />
           </Form.Group>
           <Form.Group className="row">
@@ -147,14 +147,15 @@ const UserStory = (props) => {
             <Form.Control
               className="col-sm-10 form-control-plaintext"
               type="text"
-              id="weight"
+              id={`weight${id}`}
               value={weight}
+              readOnly
             />
           </Form.Group>
           <Sprint sprint={sprint} />
           <LabelContainer labels={labels} />
           <TasksContainer tasks={tasks} />
-          <div class="card-body text-right">
+          <div className="card-body text-right">
             <Button
               variant="primary"
               className="mr-2"
