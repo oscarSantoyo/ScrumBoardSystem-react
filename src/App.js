@@ -45,7 +45,7 @@ const App = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  projects: state.projects.projects
+  projects: state.projects.projects,
 });
 
 const mapDispatchToProps = (dispatch) => ({

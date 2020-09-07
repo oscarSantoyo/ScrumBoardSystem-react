@@ -16,6 +16,7 @@ import * as yup from "yup";
 import { connect } from "react-redux";
 import { addUserStory, fetchLabels, cleanError } from "../../actions/";
 import ReactTags from "react-tag-autocomplete";
+import ConfirmationModal from "../shared/ConfirmationModal";
 
 const Sprint = ({ sprint, sprints, register }) => {
   const [sprintValue, setSprintValue] = useState(sprint?.name);
@@ -175,7 +176,15 @@ const TasksContainer = ({ tasks, register }) => {
 };
 
 const UserStory = (props) => {
-  const { sprints, userStoryEdit, onSubmit, setLabelTagsHandler } = props;
+  const {
+    sprints,
+    userStoryEdit,
+    onSubmit,
+    setLabelTagsHandler,
+    handleSubmit,
+    register,
+    errors,
+  } = props;
   const labelsCatalog = props.labels;
   const {
     title,
@@ -186,20 +195,6 @@ const UserStory = (props) => {
     sprint,
     id,
   } = userStoryEdit;
-
-  const schema = yup.object().shape({
-    title: yup.string().required(),
-    description: yup.string().required(),
-    weight: yup.number().positive().integer().min(1).max(23).required(),
-  });
-
-  const { handleSubmit, register, control, errors } = useForm({
-    resolver: yupResolver(schema),
-  });
-  useFieldArray({
-    control,
-    name: "tasks",
-  });
 
   return (
     <Form>
@@ -237,7 +232,6 @@ const UserStory = (props) => {
         />
         <span className="col-sm-2"></span>
         <p className="col-sm-10 error-message">{errors.description?.message}</p>
-        
       </Form.Group>
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Weight</Form.Label>
@@ -265,12 +259,14 @@ const UserStory = (props) => {
     </Form>
   );
 };
+
 const AddUserStory = ({
   project,
   sprints,
   labels,
   userStoryEdit,
   saveSucceeded,
+  saving,
   show,
   handleClose,
   addUserStory,
@@ -278,7 +274,26 @@ const AddUserStory = ({
   cleanError,
 }) => {
   const [labelTags, setLabelTags] = useState([]);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const { id } = userStoryEdit;
+
+  const schema = yup.object().shape({
+    title: yup.string().required(),
+    description: yup.string().required(),
+    weight: yup.number().positive().integer().min(1).max(23).required(),
+  });
+
+  const { handleSubmit, register, control, errors, watch } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  useFieldArray({
+    control,
+    name: "tasks",
+  });
+
+  const fields = watch();
+
   const onSubmit = (values) => {
     values.labels = labelTags.map((tag) => {
       return { id: tag.id, description: tag.name };
@@ -291,45 +306,82 @@ const AddUserStory = ({
   };
 
   const handlerCloser = () => {
+    if (emptyFields()) {
+      cleanError();
+      handleClose();
+    } else {
+      setShowConfirmationModal(true);
+    }
+  };
+
+  const emptyFields = () => {
+    return (
+      fields.title === "" &&
+      fields.description === "" &&
+      fields.weight === "" &&
+      fields.sprint.id === "" &&
+      fields.tasks.length === 1 &&
+      fields.tasks[0].description === ""
+    );
+  };
+
+  const handlerConfirmationModalDismiss = () => {
+    setShowConfirmationModal(false);
+  };
+
+  const handlerConfirmationModalAccept = () => {
+    setShowConfirmationModal(false);
     cleanError();
     handleClose();
   };
 
   useEffect(() => {
-    if (saveSucceeded) {
+    if (!saving && saveSucceeded) {
       handleClose();
       setLabelTags([]);
     }
-  }, [saveSucceeded]);
+  }, [saveSucceeded, saving]);
 
   useEffect(() => {
     fetchLabels();
   }, [fetchLabels]);
   return (
-    <Modal show={show} onHide={handlerCloser} size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {id != null ? "Edit User Story" : "Add a User Story"}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Alert show={!saveSucceeded} variant="danger">
-          An error has ocurred trying to save, please try again!
-        </Alert>
-        <UserStory
-          userStoryEdit={userStoryEdit}
-          onSubmit={onSubmit}
-          sprints={sprints}
-          labels={labels}
-          setLabelTagsHandler={setLabelTagsHandler}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handlerCloser}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <ConfirmationModal
+        showModal={showConfirmationModal}
+        title="Are you sure you want to cancel this action?"
+        body="You've already start to edit the new user story this action will cancel everything."
+        handleDismiss={handlerConfirmationModalDismiss}
+        handleAccept={handlerConfirmationModalAccept}
+      />
+      <Modal show={show} onHide={handlerCloser} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {id != null ? "Edit User Story" : "Add a User Story"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Alert show={!saveSucceeded} variant="danger">
+            An error has ocurred trying to save, please try again!
+          </Alert>
+          <UserStory
+            userStoryEdit={userStoryEdit}
+            onSubmit={onSubmit}
+            sprints={sprints}
+            labels={labels}
+            setLabelTagsHandler={setLabelTagsHandler}
+            handleSubmit={handleSubmit}
+            errors={errors}
+            register={register}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handlerCloser}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 
@@ -338,6 +390,7 @@ const mapStateToProps = (state) => ({
   sprints: state.sprints,
   labels: state.labels.labels,
   saveSucceeded: state.userstories.saveSucceeded,
+  saving: state.userstories.saving,
 });
 
 const mapDispatchToProps = (dispatch) => ({
