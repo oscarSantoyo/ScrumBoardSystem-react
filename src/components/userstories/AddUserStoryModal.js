@@ -292,7 +292,7 @@ const AddUserStory = ({
     name: "tasks",
   });
 
-  const fields = watch();
+  const currentFieldsState = watch();
 
   const onSubmit = (values) => {
     values.labels = labelTags.map((tag) => {
@@ -316,12 +316,12 @@ const AddUserStory = ({
 
   const emptyFields = () => {
     return (
-      fields.title === "" &&
-      fields.description === "" &&
-      fields.weight === "" &&
-      fields.sprint.id === "" &&
-      fields.tasks.length === 1 &&
-      fields.tasks[0].description === ""
+      currentFieldsState.title === "" &&
+      currentFieldsState.description === "" &&
+      currentFieldsState.weight === "" &&
+      currentFieldsState.sprint.id === "" &&
+      currentFieldsState.tasks.length === 1 &&
+      currentFieldsState.tasks[0].description === ""
     );
   };
 
