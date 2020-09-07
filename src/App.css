@@ -431,3 +431,13 @@ a.article:hover {
     opacity: 0.5;
     cursor: auto;
   }
+
+
+  /* ---------------------------------------------------
+    FORMS Error Messages
+----------------------------------------------------- */
+
+.error-message{
+  color: red;
+  font-size: small;
+}

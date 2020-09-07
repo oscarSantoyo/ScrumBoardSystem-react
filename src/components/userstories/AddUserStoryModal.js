@@ -8,11 +8,13 @@ import {
   DropdownButton,
   Form,
   Badge,
-  Alert
+  Alert,
 } from "react-bootstrap";
 import { useForm, useFieldArray } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers";
+import * as yup from "yup";
 import { connect } from "react-redux";
-import { addUserStory, fetchLabels,cleanError } from "../../actions/";
+import { addUserStory, fetchLabels, cleanError } from "../../actions/";
 import ReactTags from "react-tag-autocomplete";
 
 const Sprint = ({ sprint, sprints, register }) => {
@@ -184,7 +186,16 @@ const UserStory = (props) => {
     sprint,
     id,
   } = userStoryEdit;
-  const { handleSubmit, register, control } = useForm();
+
+  const schema = yup.object().shape({
+    title: yup.string().required(),
+    description: yup.string().required(),
+    weight: yup.number().positive().integer().min(1).max(23).required(),
+  });
+
+  const { handleSubmit, register, control, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
   useFieldArray({
     control,
     name: "tasks",
@@ -204,35 +215,42 @@ const UserStory = (props) => {
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Title</Form.Label>
         <Form.Control
-          className="col-sm-10"
+          className="col-sm-9 mr-1"
           type="text"
           ref={register}
           name="title"
           id="title"
           defaultValue={title}
         />
+        <span className="col-sm-2"></span>
+        <p className="col-sm-10 error-message">{errors.title?.message}</p>
       </Form.Group>
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Description</Form.Label>
         <Form.Control
-          className="col-sm-10"
+          className="col-sm-9 mr-1"
           type="textarea"
           ref={register}
           name="description"
           id="description"
           defaultValue={description}
         />
+        <span className="col-sm-2"></span>
+        <p className="col-sm-10 error-message">{errors.description?.message}</p>
+        
       </Form.Group>
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Weight</Form.Label>
         <Form.Control
-          className="col-sm-10"
+          className="col-sm-9 mr-1"
           type="text"
           ref={register}
           name="weight"
           id="weight"
           defaultValue={weight}
         />
+        <span className="col-sm-2"></span>
+        <p className="col-sm-10 error-message">{errors.weight?.message}</p>
       </Form.Group>
       <Sprint sprint={sprint} sprints={sprints} register={register} />
       <LabelContainer
@@ -257,7 +275,7 @@ const AddUserStory = ({
   handleClose,
   addUserStory,
   fetchLabels,
-  cleanError
+  cleanError,
 }) => {
   const [labelTags, setLabelTags] = useState([]);
   const { id } = userStoryEdit;
@@ -272,17 +290,17 @@ const AddUserStory = ({
     setLabelTags(labelTags);
   };
 
-  const handlerCloser=()=>{
-    cleanError()
-    handleClose()
-  }
+  const handlerCloser = () => {
+    cleanError();
+    handleClose();
+  };
 
-  useEffect(()=>{
-    if(saveSucceeded){
+  useEffect(() => {
+    if (saveSucceeded) {
       handleClose();
       setLabelTags([]);
-  }
-  },[saveSucceeded])
+    }
+  }, [saveSucceeded]);
 
   useEffect(() => {
     fetchLabels();
@@ -295,7 +313,9 @@ const AddUserStory = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Alert show={!saveSucceeded} variant="danger">An error has ocurred trying to save, please try again!</Alert>
+        <Alert show={!saveSucceeded} variant="danger">
+          An error has ocurred trying to save, please try again!
+        </Alert>
         <UserStory
           userStoryEdit={userStoryEdit}
           onSubmit={onSubmit}
@@ -317,14 +337,14 @@ const mapStateToProps = (state) => ({
   project: state.projects.project,
   sprints: state.sprints,
   labels: state.labels.labels,
-  saveSucceeded:state.userstories.saveSucceeded
+  saveSucceeded: state.userstories.saveSucceeded,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   addUserStory: (projectId, values) =>
     dispatch(addUserStory(dispatch, projectId, values)),
   fetchLabels: () => dispatch(fetchLabels(dispatch)),
-  cleanError:()=>dispatch(cleanError())
+  cleanError: () => dispatch(cleanError()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddUserStory);

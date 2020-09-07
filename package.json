@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "@hookform/resolvers": "^0.1.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -27,7 +28,8 @@
     "react-tag-autocomplete": "^6.1.0",
     "redux": "^4.0.5",
     "tsutils": "^3.17.1",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",
