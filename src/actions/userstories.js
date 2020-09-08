@@ -20,7 +20,6 @@ const fetchedUserstories = (userstories) => {
 };
 
 export const addUserStory = (dispatch, projectId, newUserstory) => {
-  dispatch(cleanError());
   axios
     .post(`/apiprojects/projects/${projectId}/userstories`, newUserstory)
     .then((res) => res.data)

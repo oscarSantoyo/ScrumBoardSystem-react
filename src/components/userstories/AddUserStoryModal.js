@@ -280,7 +280,7 @@ const AddUserStory = ({
   const schema = yup.object().shape({
     title: yup.string().required(),
     description: yup.string().required(),
-    weight: yup.number().positive().integer().min(1).max(23).required(),
+    //weight: yup.number().positive().integer().min(1).max(23).required(),
   });
 
   const { handleSubmit, register, control, errors, watch } = useForm({
@@ -361,7 +361,7 @@ const AddUserStory = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Alert show={!saveSucceeded} variant="danger">
+          <Alert show={!saveSucceeded && !saving} variant="danger">
             An error has ocurred trying to save, please try again!
           </Alert>
           <UserStory
