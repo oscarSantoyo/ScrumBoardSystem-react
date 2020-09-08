@@ -280,7 +280,7 @@ const AddUserStory = ({
   const schema = yup.object().shape({
     title: yup.string().required(),
     description: yup.string().required(),
-    //weight: yup.number().positive().integer().min(1).max(23).required(),
+    weight: yup.number().positive().integer().min(1).max(23).required(),
   });
 
   const { handleSubmit, register, control, errors, watch } = useForm({
