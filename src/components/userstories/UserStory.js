@@ -49,13 +49,19 @@ const LabelContainer = ({ labels }) => {
   );
 };
 
-const Task = ({ task }) => {
+const Task = ({ task, userStoryId, updateTaskHandler }) => {
+  const handleChange = (evt) => {
+    task.done = evt.target.checked;
+    updateTaskHandler(userStoryId, task);
+  };
+
   return (
     <InputGroup key={task.id} className="mb-3">
       <InputGroup.Prepend>
         <InputGroup.Checkbox
           aria-label="Checkbox for done tasks"
-          value={task.done}
+          defaultChecked={task.done}
+          onClick={handleChange}
         />
       </InputGroup.Prepend>
       <FormControl
@@ -68,11 +74,19 @@ const Task = ({ task }) => {
   );
 };
 
-const TasksContainer = ({ tasks }) => {
+const TasksContainer = ({ tasks, userStoryId, updateTaskHandler }) => {
   return (
     <Form.Group className="row align-items-center">
       <div className="col-sm-2">Tasks</div>
-      {tasks && tasks.map((task) => <Task key={task.id} task={task} />)}
+      {tasks &&
+        tasks.map((task) => (
+          <Task
+            key={task.id}
+            task={task}
+            userStoryId={userStoryId}
+            updateTaskHandler={updateTaskHandler}
+          />
+        ))}
     </Form.Group>
   );
 };
@@ -83,6 +97,7 @@ const UserStory = (props) => {
     deleteUserstory,
     projectId,
     setUserStoryEditHandler,
+    updateTaskHandler,
   } = props;
   const { title, description, weight, labels, tasks, sprint, id } = userStory;
   const [showModal, setShowModal] = useState(false);
@@ -154,7 +169,11 @@ const UserStory = (props) => {
           </Form.Group>
           <Sprint sprint={sprint} />
           <LabelContainer labels={labels} />
-          <TasksContainer tasks={tasks} />
+          <TasksContainer
+            tasks={tasks}
+            updateTaskHandler={updateTaskHandler}
+            userStoryId={id}
+          />
           <div className="card-body text-right">
             <Button
               variant="primary"

@@ -128,13 +128,24 @@ const Task = ({ task, register, index, onEnterPressed }) => {
         value={task.id}
         ref={register}
       />
+      <FormControl
+        type="text"
+        readOnly
+        hidden
+        name={`tasks[${index}].order`}
+        value={index + 1}
+        ref={register}
+      />
       <InputGroup.Prepend>
-        <InputGroup.Checkbox
-          aria-label="Checkbox for done tasks"
-          checked={task?.done}
-          name={`tasks[${index}].done`}
-          ref={register}
-        />
+        <div class="input-group-text">
+          <Form.Check
+            type="checkbox"
+            aria-label="Checkbox for done tasks"
+            defaultChecked={task?.done}
+            name={`tasks[${index}].done`}
+            ref={register}
+          />
+        </div>
       </InputGroup.Prepend>
       <FormControl
         type="text"
