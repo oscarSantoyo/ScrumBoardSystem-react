@@ -60,7 +60,6 @@ const SideBarContainer = (props) => {
           isActive={false}
           id="home"
           subMenu={[{ name: "Home 1", href: "#" }]}
-          isActive="true"
         />
         <NavSimpleElement name="About" href="#" />
         <NavElement

@@ -25,11 +25,20 @@ export const addUserStory = (dispatch, projectId, newUserstory) => {
     .then((res) => res.data)
     .then((userstory) =>
       dispatch(addedUserStory(dispatch, projectId, userstory))
-    );
+    )
+    .catch((error) => dispatch(errorOnAdd()));
   return {
     type: "ADD_USER_STORY",
   };
 };
+
+const errorOnAdd = () => ({
+  type: "ERROR_ADD_USER_STORY",
+});
+
+export const cleanError = () => ({
+  type: "CLEAN_ERROR_ADD_USER_STORY",
+});
 
 const addedUserStory = (dispatch, projectId) => {
   dispatch(getUserstories(dispatch, projectId));

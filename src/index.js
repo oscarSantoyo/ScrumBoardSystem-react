@@ -7,18 +7,34 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import reducers from "./reducers";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { transitions, positions, Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
 
-const store = createStore(reducers,
-  (process.env.NODE_ENV==="development")?window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__():"");
+const options = {
+  position: positions.TOP_RIGHT,
+  timeout: 5000,
+  offset: "30px",
+  transition: transitions.FADE,
+};
+
+const store = createStore(
+  reducers,
+  process.env.NODE_ENV === "development"
+    ? window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__()
+    : ""
+);
 
 render(
-  <Provider store={store}>
-    <Router>
-      <Switch>
-        <Route path="/" component={App} />
-      </Switch>
-    </Router>
-  </Provider>,
+  <AlertProvider template={AlertTemplate} {...options}>
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          <Route path="/" component={App} />
+        </Switch>
+      </Router>
+    </Provider>
+  </AlertProvider>,
   document.getElementById("root")
 );
 

@@ -8,7 +8,6 @@ import "./App.css";
 
 import { getProjects as actionGetProjects } from "./actions/projects";
 import { ProjectSelectedContainer, SideBarContainer } from "./containers/";
-
 library.add(faTrash, faEdit, faPlus);
 const WelcomeComponent = () => <h1>Welcome!</h1>;
 
@@ -28,10 +27,10 @@ const App = (props) => {
   ];
 
   useEffect(() => getProjects(), [getProjects]);
+
   return (
     <div className="wrapper">
       <SideBarContainer title="Scrum Manager" entries={entries} />
-
       <div className="App container">
         <Switch>
           <Route exact path="/" component={WelcomeComponent} />
