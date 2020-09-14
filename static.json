@@ -1,0 +1,11 @@
+{
+  "root": "build/",
+  "proxies": {
+    "/apiprojects/": {
+      "origin": "${REACT_APP_URL_API_PROJECTS}"
+    },
+    "/apiuserstories/": {
+      "origin": "${REACT_APP_URL_API_USER_STORIES}"
+    }
+  }
+}
