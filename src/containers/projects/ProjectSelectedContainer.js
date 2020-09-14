@@ -5,6 +5,7 @@ import {
   deleteUserstory,
   getSprints,
   selectProject,
+  updateTask,
 } from "../../actions/";
 import UserStory from "../../components/userstories/UserStory";
 import AddUserStoryModal from "../../components/userstories/AddUserStoryModal";
@@ -78,11 +79,20 @@ const SprintContainer = (props) => {
 };
 
 const UserStoriesContainer = (props) => {
-  const { title, userStories, deleteUserstory, projectId } = props;
+  const {
+    title,
+    userStories,
+    projectId,
+    deleteUserstory,
+    updateTaskHandler,
+  } = props;
   const [show, setShow] = useState(false);
   const [userStoryEdit, setUserStoryEdit] = useState({});
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setUserStoryEdit({});
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
 
   const setUserStoryEditHandler = (userStory) => {
@@ -111,6 +121,7 @@ const UserStoriesContainer = (props) => {
                 handleShow={handleShow}
                 handleClose={handleClose}
                 setUserStoryEditHandler={setUserStoryEditHandler}
+                updateTaskHandler={updateTaskHandler}
               />
             );
           })}
@@ -121,6 +132,7 @@ const UserStoriesContainer = (props) => {
 
 const getUserStoriesWOSprint = (userStories) =>
   userStories && userStories.filter((userStory) => !userStory.sprint);
+
 const ProjectSelectedContainer = (props) => {
   const {
     getUserStoriesByProjectId,
@@ -132,8 +144,13 @@ const ProjectSelectedContainer = (props) => {
     projectSprints,
     selectProjectState,
     deleteUserstory,
+    updateTask,
   } = props;
   const { projectId } = useRouteMatch().params;
+
+  const updateTaskHandler = (userStoryId, task) => {
+    updateTask(projectId, userStoryId, task);
+  };
 
   useEffect(() => {
     selectProjectState(projectId);
@@ -157,6 +174,7 @@ const ProjectSelectedContainer = (props) => {
         deleteUserstory={deleteUserstory}
         userStories={getUserStoriesWOSprint(projectUserStories)}
         projectId={projectId}
+        updateTaskHandler={updateTaskHandler}
       />
       <SprintContainer
         sprints={projectSprints}
@@ -164,6 +182,7 @@ const ProjectSelectedContainer = (props) => {
         deleteUserstory={deleteUserstory}
         userStories={projectUserStories}
         projectId={projectId}
+        updateTaskHandler={updateTaskHandler}
       />
     </div>
   );
@@ -190,6 +209,8 @@ const mapDispatchToProps = (dispatch) => ({
     console.log("Get tasks by userStory id"),
   deleteUserstory: (projectId, userStoryId) =>
     dispatch(deleteUserstory(dispatch, projectId, userStoryId)),
+  updateTask: (projectId, userStoryId, task) =>
+    dispatch(updateTask(dispatch, projectId, userStoryId, task)),
 });
 
 export default connect(
