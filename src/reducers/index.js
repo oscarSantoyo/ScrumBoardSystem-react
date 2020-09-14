@@ -1,16 +1,16 @@
-import { combineReducers } from 'redux'
-import projects from './projects'
-import userstories from './userstories' 
-import global from './global'
-import sprints from './sprints'
-import labels from './labels'
+import { combineReducers } from "redux";
+import projects from "./projects";
+import userstories from "./userstories";
+import sprints from "./sprints";
+import labels from "./labels";
+import alerts from "./alerts";
 
-const reducers= combineReducers({
+const reducers = combineReducers({
   projects,
   userstories,
   sprints,
-  global,
-  labels
-})
+  labels,
+  alerts,
+});
 
-export default reducers
+export default reducers;
