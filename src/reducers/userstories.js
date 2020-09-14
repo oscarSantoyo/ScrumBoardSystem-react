@@ -19,6 +19,8 @@ const userstories = (
       return state;
     case "DELETED_USER_STORY":
       return state;
+    case "UPDATE_TASK":
+      return state;
     default:
       return state;
   }

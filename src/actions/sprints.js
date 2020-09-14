@@ -35,11 +35,7 @@ export const addedSprint = (newSprint) => ({
 export const deleteSprint = (dispatch, currentProjectId, sprintId) => {
   axios
     .delete(`/apiprojects/projects/${currentProjectId}/sprints/${sprintId}`)
-    .then((res) => {
-      if (res.status === 200) {
-        dispatch(deletedSprint(sprintId));
-      }
-    });
+    .then((res) => dispatch(deletedSprint(sprintId)));
   return {
     type: "DELETE_SPRINT",
   };
