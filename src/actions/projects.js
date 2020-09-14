@@ -42,11 +42,8 @@ export const recieveProjects = (projects) => ({
 });
 
 export const deleteProject = (dispatch, id) => {
-  axios.delete(`/apiprojects/projects/${id}`).then((res) => {
-    if (res.status === 200) {
-      dispatch(deletedProject(id));
-    }
-  });
+  axios.delete(`/apiprojects/projects/${id}`)
+  .then((res) => dispatch(deletedProject(id)));
   return {
     type: "DELETE_PROJECT",
   };
