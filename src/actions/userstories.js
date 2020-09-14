@@ -50,11 +50,7 @@ const addedUserStory = (dispatch, projectId) => {
 export const deleteUserstory = (dispatch, projectId, userStoryId) => {
   axios
     .delete(`/apiprojects/projects/${projectId}/userstories/${userStoryId}`)
-    .then((res) => {
-      if (res.status == 200) {
-        dispatch(deletedUserstory(dispatch, projectId));
-      }
-    });
+    .then((res) => dispatch(deletedUserstory(dispatch, projectId)));
   return {
     type: "DETELE_USER_STORY",
   };
@@ -70,11 +66,7 @@ const deletedUserstory = (dispatch, projectId) => {
 export const updateTask = (dispatch, projectId, userStoryId, task) => {
   axios
     .put(`/apiuserstories/userstories/${userStoryId}/tasks/${task.id}`, task)
-    .then((res) => {
-      if (res.status == 200) {
-        dispatch(getUserstories(dispatch, projectId));
-      }
-    });
+    .then((res) => dispatch(getUserstories(dispatch, projectId)));
   return {
     type: "UPDATE_TASK",
   };
