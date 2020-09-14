@@ -1,5 +1,8 @@
 {
   "root": "build/",
+  "routes": {
+    "/**": "index.html"
+  },
   "proxies": {
     "/apiprojects/": {
       "origin": "${REACT_APP_URL_API_PROJECTS}"
