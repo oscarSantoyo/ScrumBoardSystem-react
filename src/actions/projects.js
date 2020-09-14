@@ -30,7 +30,8 @@ export const getProjects = (dispatch) => {
     .then((res) => res.data)
     .then((projects) => {
       dispatch(recieveProjects(projects));
-    });
+    })
+    .catch(e => console.log("There was an issue consumming the API: ", e));
   return {
     type: "FETCH_PROJECTS",
   };
